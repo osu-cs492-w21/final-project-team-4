@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Steam News</string>
+
+    <string name="game_search_box_hint">Search Games...</string>
+    <string name="game_search_button_text">Search</string>
+
+    <string name="action_game_search">Search and bookmark games</string>
 </resources>
