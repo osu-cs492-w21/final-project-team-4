@@ -1,11 +1,13 @@
 package com.example.android.steamnews;
 
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.android.steamnews.data.GameAppidItem;
@@ -70,6 +72,10 @@ public class GameSearchAdapter extends RecyclerView.Adapter<GameSearchAdapter.Se
 
         void bind(GameAppidItem gameAppidItem) {
             this.searchResultTV.setText(gameAppidItem.name);
+
+            int bookmarkId = gameAppidItem.bookmarked ? R.drawable.ic_baseline_bookmark_24 : R.drawable.ic_baseline_bookmark_border_24;
+            Drawable bookmarkIcon = ContextCompat.getDrawable(this.itemView.getContext(), bookmarkId);
+            this.searchResultTV.setCompoundDrawablesRelativeWithIntrinsicBounds(null, null, bookmarkIcon, null);
         }
     }
 }

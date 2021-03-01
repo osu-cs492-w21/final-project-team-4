@@ -8,4 +8,16 @@ public class GameAppidItem {
 
     @SerializedName("appid")
     public int appId;
+
+    public boolean bookmarked;
+
+    public GameAppidItem(String name, int appId, boolean bookmarked) {
+        this.name = name;
+        this.appId = appId;
+        this.bookmarked = bookmarked;
+    }
+
+    public GameAppidItem() {
+        this ("", 0, false);
+    }
 }
