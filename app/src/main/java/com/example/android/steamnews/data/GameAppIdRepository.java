@@ -64,12 +64,11 @@ public class GameAppIdRepository {
         return this.dao.search("%" + query + "%");
     }
 
-    public void loadAppList() {
-        // TODO caching
-        fetchAppList();
+    public LiveData<Integer> countGameAppIdItems() {
+        return this.dao.getRowCount();
     }
 
-    private void fetchAppList() {
+    public void fetchAppList() {
         Log.d(TAG, "Fetching app list");
         Call<GameAppIdList> results;
 
@@ -79,8 +78,8 @@ public class GameAppIdRepository {
             @Override
             public void onResponse(Call<GameAppIdList> call, Response<GameAppIdList> response) {
                 if (response.code() == 200) {
-                    rewriteAll(response.body().items);
                     Log.d(TAG, "Fetched app list, now updating database");
+                    rewriteAll(response.body().items);
                 } else {
                     Log.e(TAG, "Failed to fetch app list, response " + response.code());
                 }

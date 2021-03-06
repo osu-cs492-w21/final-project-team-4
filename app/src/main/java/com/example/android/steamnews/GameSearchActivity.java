@@ -28,6 +28,8 @@ public class GameSearchActivity extends AppCompatActivity
 
     private GameAppIdViewModel viewModel;
 
+    private final GameSearchActivity lifecycleOwner = this;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,7 +40,34 @@ public class GameSearchActivity extends AppCompatActivity
                 new ViewModelProvider.AndroidViewModelFactory(getApplication())
         ).get(GameAppIdViewModel.class);
 
-        this.viewModel.loadAppList();
+        // Check if the gameAppIdItems table is empty
+        this.viewModel.countGameAppIdItems().observe(
+                this,
+                new Observer<Integer>() {
+                    @Override
+                    public void onChanged(Integer rowCount) {
+                        Log.d(TAG, "Row count = " + rowCount);
+                        if(rowCount == 0) {
+                            // If the table is empty, then fetch results
+                            Log.d(TAG, "Fetching app list");
+                            viewModel.fetchAppList();
+                        } else {
+                            // If the table is not empty, then get the app list and populate the recycler view
+                            Log.d(TAG, "Using saved app list");
+                            viewModel.getAppList().observe(
+                                    lifecycleOwner,
+                                    new Observer<List<GameAppIdItem>>() {
+                                        @Override
+                                        public void onChanged(List<GameAppIdItem> gameAppIdItems) {
+                                            searchGameList("");
+                                            viewModel.getAppList().removeObserver(this);
+                                        }
+                                    }
+                            );
+                        }
+                    }
+                }
+        );
 
         this.searchBoxET = findViewById(R.id.et_game_search_box);
         this.searchResultsRV = findViewById(R.id.rv_game_search_results);
@@ -50,34 +79,39 @@ public class GameSearchActivity extends AppCompatActivity
         this.searchResultsRV.setAdapter(this.gameSearchAdapter);
 
         Button searchButton = findViewById(R.id.btn_game_search);
-
-        final GameSearchActivity liveCycleContext = this;
-
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String searchQuery = searchBoxET.getText().toString();
-
-                Log.d(TAG, "Executing search app list query: \"" + searchQuery + "\"");
-
-                viewModel.searchAppList(searchQuery).observe(
-                        liveCycleContext,
-                        new Observer<List<GameAppIdItem>>() {
-                            @Override
-                            public void onChanged(List<GameAppIdItem> gameAppIdItems) {
-                                Log.d(TAG, "Updating search results RV");
-                                gameSearchAdapter.updateSearchResults(gameAppIdItems);
-                                viewModel.searchAppList(searchQuery).removeObserver(this);
-                            }
-                        }
-                );
+                searchGameList(searchQuery);
             }
         });
     }
 
+    private void searchGameList(String searchQuery) {
+        Log.d(TAG, "Executing search app list query: \"" + searchQuery + "\"");
+
+        viewModel.searchAppList(searchQuery).observe(
+                lifecycleOwner,
+                new Observer<List<GameAppIdItem>>() {
+                    @Override
+                    public void onChanged(List<GameAppIdItem> gameAppIdItems) {
+                        Log.d(TAG, "Updating search results RV");
+
+                        gameSearchAdapter.updateSearchResults(gameAppIdItems);
+
+                        // Remove this observer (because it's search query-specific)
+                        viewModel.searchAppList(searchQuery).removeObserver(this);
+                    }
+                }
+        );
+    }
     @Override
     public void onSearchResultClicked(GameAppIdItem gameAppidItem) {
         gameAppidItem.bookmarked = !gameAppidItem.bookmarked;
+
+        this.viewModel.insertGameAppIdItem(gameAppidItem);
+
         this.gameSearchAdapter.notifyDataSetChanged();
     }
 }

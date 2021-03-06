@@ -23,6 +23,9 @@ public interface GameAppIdsDao {
     @Query("DELETE FROM gameAppIdItems")
     void deleteAll();
 
+    @Query("SELECT COUNT(appid) FROM gameAppIdItems")
+    LiveData<Integer> getRowCount();
+
     @Query("SELECT * FROM gameAppIdItems ORDER BY name ASC")
     LiveData<List<GameAppIdItem>> getAll();
 

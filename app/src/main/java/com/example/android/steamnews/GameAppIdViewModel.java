@@ -19,6 +19,14 @@ public class GameAppIdViewModel extends AndroidViewModel {
         this.repository = new GameAppIdRepository(application);
     }
 
+    public void insertGameAppIdItem(GameAppIdItem gameAppIdItem) {
+        this.repository.insertGameAppIdItem(gameAppIdItem);
+    }
+
+    public LiveData<Integer> countGameAppIdItems() {
+        return this.repository.countGameAppIdItems();
+    }
+
     public LiveData<List<GameAppIdItem>> getAppList() {
         return this.repository.getAppList();
     }
@@ -27,7 +35,7 @@ public class GameAppIdViewModel extends AndroidViewModel {
         return this.repository.searchAppList(query);
     }
 
-    public void loadAppList() {
-        this.repository.loadAppList();
+    public void fetchAppList() {
+        this.repository.fetchAppList();
     }
 }
