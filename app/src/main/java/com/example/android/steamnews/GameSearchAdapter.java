@@ -10,23 +10,23 @@ import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.android.steamnews.data.GameAppidItem;
+import com.example.android.steamnews.data.GameAppIdItem;
 
 import java.util.List;
 
 public class GameSearchAdapter extends RecyclerView.Adapter<GameSearchAdapter.SearchResultViewHolder> {
-    private List<GameAppidItem> searchResultsList;
+    private List<GameAppIdItem> searchResultsList;
     private OnSearchResultClickListener resultClickListener;
 
     interface OnSearchResultClickListener {
-        void onSearchResultClicked(GameAppidItem gameAppidItem);
+        void onSearchResultClicked(GameAppIdItem gameAppidItem);
     }
 
     public GameSearchAdapter(OnSearchResultClickListener listener) {
         this.resultClickListener = listener;
     }
 
-    public void updateSearchResults(List<GameAppidItem> searchResultsList) {
+    public void updateSearchResults(List<GameAppIdItem> searchResultsList) {
         this.searchResultsList = searchResultsList;
         notifyDataSetChanged();
     }
@@ -70,7 +70,7 @@ public class GameSearchAdapter extends RecyclerView.Adapter<GameSearchAdapter.Se
             });
         }
 
-        void bind(GameAppidItem gameAppidItem) {
+        void bind(GameAppIdItem gameAppidItem) {
             this.searchResultTV.setText(gameAppidItem.name);
 
             int bookmarkId = gameAppidItem.bookmarked ? R.drawable.ic_baseline_bookmark_24 : R.drawable.ic_baseline_bookmark_border_24;
