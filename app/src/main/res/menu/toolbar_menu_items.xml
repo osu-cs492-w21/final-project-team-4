@@ -5,25 +5,32 @@
     android:id="@+id/search_icon"
         android:icon="@drawable/search_icon"
         app:showAsAction="always"
-        android:title="Search">
+        android:title="Search"
+        android:iconTint="@color/bar_icons">
     </item>
     <item
         android:id="@+id/home_icon"
         android:icon="@drawable/home_icon"
         app:showAsAction="always"
-        android:title="Home">
+        android:title="Home"
+        android:iconTint="@color/bar_icons">
     </item>
     <item
         android:id="@+id/trending_icon"
         android:icon="@drawable/trending_icon"
         app:showAsAction="always"
         android:title="Trending"
+        android:iconTint="@color/bar_icons"
+
         >
     </item>
     <item
         android:id="@+id/options_icon"
         android:icon="@drawable/options_icon"
         app:showAsAction="always"
-        android:title="Options">
+        android:title="Options"
+        android:iconTint="@color/bar_icons">
     </item>
+
+
 </menu>

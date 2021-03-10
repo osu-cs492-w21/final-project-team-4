@@ -22,7 +22,7 @@
     <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="660dp"
-        android:text="@string/app_name" />
+        android:background="@color/background"/>
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/bottom_toolbar"

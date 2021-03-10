@@ -17,6 +17,7 @@
 
     <style name="Theme.SteamNews.NoActionBar" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Primary brand color. -->
+        <item name="android:actionButtonStyle">@style/ActionButtonStyle</item>
         <item name="colorPrimary">@color/purple_200</item>
         <item name="colorPrimaryVariant">@color/purple_700</item>
         <item name="colorOnPrimary">@color/black</item>
