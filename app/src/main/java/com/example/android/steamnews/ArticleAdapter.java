@@ -60,7 +60,7 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ArticleV
         ArticleViewHolder(View itemView){
             super(itemView);
             this.nameTV= itemView.findViewById(R.id.tv_article_title);
-            this.urlTV = itemView.findViewById(R.id.tv_article_url);
+            //this.urlTV = itemView.findViewById(R.id.tv_article_url);
 
             itemView.setOnClickListener(new View.OnClickListener(){
                 @Override
@@ -73,7 +73,7 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ArticleV
         }
         void bind (ArticleDataItem articleDataItem){
             this.nameTV.setText(articleDataItem.title);
-            this.urlTV.setText(articleDataItem.url);
+           // this.urlTV.setText(articleDataItem.url);
 
         }
     }

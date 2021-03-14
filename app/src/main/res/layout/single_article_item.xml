@@ -8,17 +8,15 @@
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="16dp">
+        android:padding="16dp"
+        android:background="@color/article_title_background">
 
         <TextView
             android:id="@+id/tv_article_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?attr/textAppearanceHeadline5"/>
-        <TextView
-            android:id="@+id/tv_article_url"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?attr/textAppearanceHeadline5"/>
+            android:textAppearance="?attr/textAppearanceHeadline5"
+            android:background="@color/article_title_background"/>
+
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>

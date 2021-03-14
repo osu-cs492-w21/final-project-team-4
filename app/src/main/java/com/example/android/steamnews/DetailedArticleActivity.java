@@ -1,5 +1,7 @@
 package com.example.android.steamnews;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -97,6 +99,9 @@ private final DetailedArticleActivity lifecycleOwner = this;
     @Override
     public void onSearchResultClicked(ArticleDataItem articleDataItem) {
         Log.d(TAG, "Opening the article in a browser: " + articleDataItem.title);
+        Log.d(TAG, "Here is the URL: " + articleDataItem.url);
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(articleDataItem.url));
+        startActivity(intent);
     }
 
 
