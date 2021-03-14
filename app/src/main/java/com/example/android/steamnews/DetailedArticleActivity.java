@@ -10,6 +10,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.android.steamnews.data.ArticleData;
@@ -23,7 +24,7 @@ public class DetailedArticleActivity extends AppCompatActivity implements  Artic
     private RecyclerView articleDetailRV;
     private ArticleAdapter articleAdapter;
     private ArticleViewModel viewModel;
-
+    private final DetailedArticleActivity lifecycleowner = this;
 
 
 private final DetailedArticleActivity lifecycleOwner = this;
@@ -33,6 +34,7 @@ private final DetailedArticleActivity lifecycleOwner = this;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_articles_layout);
         this.articleDetailRV = findViewById(R.id.rv_articles);
+        this.articleDetailRV.setLayoutManager(new LinearLayoutManager(this));
         this.articleDetailRV.setHasFixedSize(true);
 
         this.articleAdapter = new ArticleAdapter(this);

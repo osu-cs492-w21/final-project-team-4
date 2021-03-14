@@ -13,11 +13,12 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 
 public class ArticleData {
+    private static final String TAG = ArticleData.class.getSimpleName();
     public ArrayList<ArticleDataItem> items;
 
 
     public ArticleData (){
-        this.items = null;
+        this.items = new ArrayList<>();
     }
 
 
@@ -31,23 +32,25 @@ public class ArticleData {
     public static class JsonDeserializer implements com.google.gson.JsonDeserializer<ArticleData> {
         @Override
         public ArticleData deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+            Log.d(TAG, "Hrer is the json: " + json);
             JsonObject resultsObj = json.getAsJsonObject();
-            JsonObject appNewsObj = resultsObj.getAsJsonObject("appnews");
-            JsonArray list = appNewsObj.getAsJsonArray("newsitems");
+            JsonObject appNewsListObj = resultsObj.getAsJsonObject("appnews");
+            Log.d(TAG, "Here is the appnews: " + appNewsListObj);
+            JsonArray newsList = appNewsListObj.getAsJsonArray("newsitems");
+            Log.d(TAG, "Here is the newsitems: " + newsList);
 
-            ArticleData articleList = new ArticleData();
-            if(list != null){
-                for(int i =0; i< list.size(); i++){
-                    JsonObject element = list.get(i).getAsJsonObject();
+            ArticleData articleData = new ArticleData();
+            if(newsList != null){
+                for(int i=0; i <newsList.size(); i++){
+                    JsonObject element = newsList.get(i).getAsJsonObject();
                     ArticleDataItem item = new ArticleDataItem(
                             element.getAsJsonPrimitive("title").getAsString(),
                             element.getAsJsonPrimitive("url").getAsString()
                     );
-                    articleList.items.add(item);
+                    articleData.items.add(item);
                 }
             }
-        //Log.d(TAG, "Here is the article data that we deserialized: " + articleList);
-        return articleList;
+         return articleData;
         }
 
 
