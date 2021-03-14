@@ -8,6 +8,7 @@
 
 
     <LinearLayout
+        android:background="@color/background"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
@@ -15,29 +16,31 @@
 
 
         <EditText
-            android:background="@color/background"
             android:id="@+id/et_game_search_box"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="22sp"
-            android:hint="@string/game_search_box_hint" />
+            android:textColor="@color/bar_icons"
+            android:background="@color/steam_icon"
+            android:hint="@string/game_search_box_hint"
+            android:textSize="22sp" />
 
         <Button
-            android:background="@color/background"
             android:id="@+id/btn_game_search"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="4dp"
-            android:text="@string/game_search_button_text"/>
+            android:color="@color/steam_icon"
+            android:text="@string/game_search_button_text" />
 
         <FrameLayout
+            android:background="@color/background"
             android:layout_width="match_parent"
-            android:layout_height="660dp">
+            android:layout_height="638dp">
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_game_search_results"
                 android:layout_width="match_parent"
-                android:layout_height="660dp"
+                android:layout_height="638dp"
                 android:background="@color/background"/>
 
         </FrameLayout>
