@@ -1,12 +1,15 @@
 package com.example.android.steamnews;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -20,7 +23,8 @@ public class GameSearchActivity extends AppCompatActivity
     implements GameSearchAdapter.OnSearchResultClickListener {
 
     private static final String TAG = GameSearchActivity.class.getSimpleName();
-
+    private Toolbar menutoolbar;
+    private Toolbar toptoolbar;
     private RecyclerView searchResultsRV;
     private EditText searchBoxET;
 
@@ -68,6 +72,47 @@ public class GameSearchActivity extends AppCompatActivity
                     }
                 }
         );
+
+
+        ////////////////////////////////////////////////
+
+
+        menutoolbar = (Toolbar) findViewById(R.id.bottom_toolbar);
+        menutoolbar.inflateMenu(R.menu.toolbar_menu_items);
+
+
+        //Listeners for clicks on the buttons on the bottom of the screen.
+        //These can be used to switch between activities
+        menutoolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                if(item.getItemId() == R.id.search_icon){
+                    Log.d(Settings.class.getSimpleName(), "Setting Activity to Search");
+                }else if(item.getItemId() == R.id.home_icon){
+                    Log.d(Settings.class.getSimpleName(), "Setting Activity to Home");
+                    openHomePage();
+                }else if(item.getItemId() == R.id.trending_icon){
+                    Log.d(Settings.class.getSimpleName(), "Setting Activity to Trending");
+                }else if(item.getItemId() == R.id.account_icon){
+                    Log.d(Settings.class.getSimpleName(), "Setting Activity to Options");
+                    openProfilePage();
+                }
+                //else none of the id's match
+                return false;
+            }
+
+            public void openProfilePage() {
+                Intent profileIntent = new Intent(GameSearchActivity.this, Settings.class);
+                startActivity(profileIntent);
+            }
+            public void openHomePage() {
+                Intent profileIntent = new Intent(GameSearchActivity.this, MainActivity.class);
+                startActivity(profileIntent);
+            }
+        });
+        ////////////////////////////////////////////////
+
+
 
         this.searchBoxET = findViewById(R.id.et_game_search_box);
         this.searchResultsRV = findViewById(R.id.rv_game_search_results);
