@@ -58,10 +58,6 @@ private final DetailedArticleActivity lifecycleOwner = this;
         );
 
 
-
-
-
-
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         //set the icon next to the title to the Steam Icon
@@ -76,24 +72,39 @@ private final DetailedArticleActivity lifecycleOwner = this;
             public boolean onMenuItemClick(MenuItem item) {
                 if (item.getItemId() == R.id.search_icon) {
                     Log.d(TAG, "Setting Activity to Search");
+                    Intent intent = new Intent(DetailedArticleActivity.this, GameSearchActivity.class);
+                    startActivity(intent);
                 } else if (item.getItemId() == R.id.home_icon) {
                     Log.d(TAG, "Setting Activity to Home");
+                    openHomePage();
                 } else if (item.getItemId() == R.id.trending_icon) {
                     Log.d(TAG, "Setting Activity to Trending");
-                //} else if (item.getItemId() == R.id.options_icon) {
-                //    Log.d(TAG, "Setting Activity to Options");
+                } else if (item.getItemId() == R.id.account_icon) {
+                    Log.d(TAG, "Setting Activity to Options");
+                    openProfilePage();
                 }
                 //else none of the id's match
                 return false;
+
             }
+
+            public void openProfilePage() {
+                Intent profileIntent = new Intent(DetailedArticleActivity.this, Settings.class);
+                startActivity(profileIntent);
+            }
+
+            public void openHomePage() {
+                Intent profileIntent = new Intent(DetailedArticleActivity.this, MainActivity.class);
+                startActivity(profileIntent);
+            }
+
+
         });
 
 
-
-
-
-
     }
+
+
 
 
     @Override
