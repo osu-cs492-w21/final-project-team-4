@@ -80,8 +80,8 @@ private final DetailedArticleActivity lifecycleOwner = this;
                     Log.d(TAG, "Setting Activity to Home");
                 } else if (item.getItemId() == R.id.trending_icon) {
                     Log.d(TAG, "Setting Activity to Trending");
-                } else if (item.getItemId() == R.id.options_icon) {
-                    Log.d(TAG, "Setting Activity to Options");
+                //} else if (item.getItemId() == R.id.options_icon) {
+                //    Log.d(TAG, "Setting Activity to Options");
                 }
                 //else none of the id's match
                 return false;

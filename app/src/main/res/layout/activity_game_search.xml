@@ -13,7 +13,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         tools:context=".GameSearchActivity"
-        android:background="@color/background">
+        >
 
 
         <EditText
