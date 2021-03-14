@@ -60,6 +60,10 @@ public class GameAppIdRepository {
         return this.dao.getAll();
     }
 
+    public LiveData<List<GameAppIdItem>> getBookmarkedGames() {
+        return this.dao.getBookmarkedGames();
+    }
+
     public LiveData<List<GameAppIdItem>> searchAppList(String query) {
         return this.dao.search("%" + query + "%");
     }

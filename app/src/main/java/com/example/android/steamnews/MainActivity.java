@@ -4,6 +4,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -21,14 +23,40 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
-public class MainActivity extends AppCompatActivity {
+import com.example.android.steamnews.data.GameAppIdItem;
+
+import java.util.List;
+
+public class MainActivity extends AppCompatActivity
+implements GameTitleAdapter.OnSearchResultClickListener{
     private final static String TAG = MainActivity.class.getSimpleName();
+    //rv for listing the titles of games
     private RecyclerView rvArticleView;
+    private GameTitleAdapter titleAdapter;
+    private GameAppIdViewModel viewModel;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        //set up view model to looks for changes in the bookmarked games
+        this.viewModel = new ViewModelProvider(
+                this,
+                new ViewModelProvider.AndroidViewModelFactory(getApplication())
+        ).get(GameAppIdViewModel.class);
+       this.viewModel.getBookmarkedGames().observe(
+               this,
+               new Observer<List<GameAppIdItem>>() {
+                   @Override
+                   public void onChanged(List<GameAppIdItem> gameAppIdItems) {
+                       viewModel.getBookmarkedGames();
+                       titleAdapter.updateSearchResults(gameAppIdItems);
+                   }
+               }
+       );
 
 
         //toolbar object for the upper toolbar (where the title is set)
@@ -58,6 +86,14 @@ public class MainActivity extends AppCompatActivity {
             }
 
         });
+        this.rvArticleView=findViewById(R.id.rv_game_title);
+        this.rvArticleView.setLayoutManager(new LinearLayoutManager(this));
+        this.rvArticleView.setHasFixedSize(true);
+        this.titleAdapter= new GameTitleAdapter(this);
+        this.rvArticleView.setAdapter(this.titleAdapter);
+
+
+
     }
 
     @Override
@@ -76,5 +112,17 @@ public class MainActivity extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+
+
+    @Override
+    public void onTitleResultClicked(GameAppIdItem gameAppidItem) {
+        Log.d(TAG, "Clicked on the game: " + gameAppidItem.appId);
+        int temp = gameAppidItem.appId;
+        Log.d(TAG, "here is the appid in the main activity: " + temp);
+        Intent intent = new Intent(this, DetailedArticleActivity.class);
+        intent.putExtra("EXTRA_APPID", temp);
+        startActivity(intent);
     }
 }
