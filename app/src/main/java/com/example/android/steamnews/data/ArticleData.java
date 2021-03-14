@@ -1,5 +1,7 @@
 package com.example.android.steamnews.data;
 
+import android.util.Log;
+
 import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonElement;
@@ -11,17 +13,16 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 
 public class ArticleData {
-    public static final String TAG = ArticleData.class.getSimpleName();
-    public ArrayList<ArticleDataItem> articleData;
+    public ArrayList<ArticleDataItem> items;
 
 
     public ArticleData (){
-        this.articleData = new ArrayList<>();
+        this.items = null;
     }
 
 
     public ArrayList<ArticleDataItem> getArticleData() {
-        return this.articleData;
+        return this.items;
     }
 
     //class for deserializing the json data
@@ -32,7 +33,7 @@ public class ArticleData {
         public ArticleData deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
             JsonObject resultsObj = json.getAsJsonObject();
             JsonObject appNewsObj = resultsObj.getAsJsonObject("appnews");
-            JsonArray list = resultsObj.getAsJsonArray("newsitems");
+            JsonArray list = appNewsObj.getAsJsonArray("newsitems");
 
             ArticleData articleList = new ArticleData();
             if(list != null){
@@ -42,10 +43,10 @@ public class ArticleData {
                             element.getAsJsonPrimitive("title").getAsString(),
                             element.getAsJsonPrimitive("url").getAsString()
                     );
-                    articleList.articleData.add(item);
+                    articleList.items.add(item);
                 }
             }
-
+        //Log.d(TAG, "Here is the article data that we deserialized: " + articleList);
         return articleList;
         }
 

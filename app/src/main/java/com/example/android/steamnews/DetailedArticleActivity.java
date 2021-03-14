@@ -7,6 +7,7 @@ import android.view.MenuItem;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
@@ -19,7 +20,6 @@ import java.util.List;
 
 public class DetailedArticleActivity extends AppCompatActivity implements  ArticleAdapter.OnSearchResultClickListener{
     private static final String TAG = DetailedArticleActivity.class.getSimpleName();
-   // public static final String EXTRA_APPID = "DetailedArticleActivity.Int";
     private RecyclerView articleDetailRV;
     private ArticleAdapter articleAdapter;
     private ArticleViewModel viewModel;
@@ -32,6 +32,31 @@ private final DetailedArticleActivity lifecycleOwner = this;
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_articles_layout);
+        this.articleDetailRV = findViewById(R.id.rv_articles);
+        this.articleDetailRV.setHasFixedSize(true);
+
+        this.articleAdapter = new ArticleAdapter(this);
+        this.articleDetailRV.setAdapter(articleAdapter);
+        this.viewModel = new ViewModelProvider(this)
+                .get(ArticleViewModel.class);
+        int tempAppId = getIntent().getIntExtra("EXTRA_APPID", 0);
+        Log.d(TAG, "Here is the appid sent into the activity: " + tempAppId);
+        viewModel.loadArticles(tempAppId);
+
+        this.viewModel.getArticleData().observe(
+                this,
+                new Observer<List<ArticleDataItem>>() {
+                    @Override
+                    public void onChanged(List<ArticleDataItem> articleDataItems) {
+                        articleAdapter.updateSearchResults(articleDataItems);
+                    }
+                }
+        );
+
+
+
+
+
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -58,33 +83,12 @@ private final DetailedArticleActivity lifecycleOwner = this;
                 return false;
             }
         });
-       this.viewModel = new ViewModelProvider(
-               this,
-               new ViewModelProvider.AndroidViewModelFactory(getApplication())
 
-       ).get(ArticleViewModel.class);
-       this.articleDetailRV = findViewById(R.id.rv_articles);
-       this.articleDetailRV.setHasFixedSize(true);
 
-       this.articleAdapter = new ArticleAdapter(this);
-       this.articleDetailRV.setAdapter(articleAdapter);
 
-      int tempAppId = getIntent().getIntExtra("EXTRA_APPID", 0);
-        Log.d(TAG, "Here is the appid sent into the activity: " + tempAppId);
-this.loadArticles(tempAppId);
-//       this.viewModel.getArticleData().observe(
-//               this,
-//               new Observer<ArticleData>() {
-//                   @Override
-//                   public void onChanged(ArticleData articleData) {
-//                       if(articleData != null) {
-//                           articleAdapter.updateSearchResults(articleData.articleData);
-//                           Log.d(TAG, "updating the articles");
-//                       }
-//
-//                   }
-//               }
-//       );
+
+
+
     }
 
 
@@ -93,27 +97,6 @@ this.loadArticles(tempAppId);
         Log.d(TAG, "Opening the article in a browser: " + articleDataItem.title);
     }
 
-    private void loadArticles(int appid){
 
-        Log.d(TAG, "Loading articles for appid: "+ appid);
-
-
-
-       this.viewModel.loadArticles(appid).observe(
-               lifecycleOwner,
-               new Observer<List<ArticleDataItem>>() {
-                   @Override
-                   public void onChanged(List<ArticleDataItem> articleDataItems) {
-                       Log.d(TAG, "Updating the search results: " +articleDataItems);
-
-                       articleAdapter.updateSearchResults(articleDataItems);
-                       viewModel.loadArticles(appid).removeObserver(this);
-                   }
-
-
-               }
-       );
-
-    }
 }
 

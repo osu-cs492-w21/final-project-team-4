@@ -1,31 +1,36 @@
 package com.example.android.steamnews;
 
-import android.app.Application;
-
-import androidx.annotation.NonNull;
-import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.ViewModel;
 
-import com.example.android.steamnews.data.ArticleData;
 import com.example.android.steamnews.data.ArticleDataItem;
+import com.example.android.steamnews.data.ArticleRepository;
 
-import java.util.ArrayList;
+import java.util.List;
 
-public class ArticleViewModel extends AndroidViewModel {
+public class ArticleViewModel extends ViewModel {
 private ArticleRepository repository;
-private LiveData<ArticleData> articleData;
+
+private LiveData<List<ArticleDataItem>> listLiveData;
 
 
-    public ArticleViewModel(@NonNull Application application) {
-        super(application);
+    public ArticleViewModel() {
+
         this.repository = new ArticleRepository();
-    }
-
-    public LiveData<ArticleData> getArticleData() {
-        return this.articleData;
-    }
-    public LiveData<ArrayList<ArticleDataItem>> loadArticles(int appid){
-       return this.repository.loadArticleData(appid);
+        this.listLiveData =this.repository.getArticleData();
 
     }
+
+    public LiveData<List<ArticleDataItem>> getArticleData() {
+        return this.listLiveData;
+    }
+
+
+    public void loadArticles(int appid){
+        this.repository.loadArticleData(appid);
+
+
+    }
+
+
 }

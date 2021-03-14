@@ -1,17 +1,12 @@
-package com.example.android.steamnews;
+package com.example.android.steamnews.data;
 
 import android.util.Log;
 
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.example.android.steamnews.data.ArticleData;
-import com.example.android.steamnews.data.ArticleDataItem;
-import com.example.android.steamnews.data.GameAppIdService;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -24,13 +19,14 @@ public class ArticleRepository {
     private static final String TAG = ArticleRepository.class.getSimpleName();
     private static final String BASE_URL = "https://api.steampowered.com";
 
-    private MutableLiveData<ArrayList<ArticleDataItem>> articleDataList;
+    private MutableLiveData<List<ArticleDataItem>> articleDataList;
 
     private GameAppIdService gameAppIdService;
 
     public ArticleRepository (){
-        this.articleDataList = new MutableLiveData<ArrayList<ArticleDataItem>>();
+        this.articleDataList = new MutableLiveData<>();
         this.articleDataList.setValue(null);
+
 
 
         Gson gson = new GsonBuilder()
@@ -43,29 +39,23 @@ public class ArticleRepository {
         this.gameAppIdService = retrofit.create(GameAppIdService.class);
 
     }
-    public MutableLiveData<ArrayList<ArticleDataItem>> getArticleData(){
+    public MutableLiveData<List<ArticleDataItem>> getArticleData(){
         return this.articleDataList;
     }
-    public LiveData<ArrayList<ArticleDataItem>> loadArticleData(int appid) {
+    public void loadArticleData(int appid) {
 
 
         Log.d(TAG, "Fetching the articles for the appid: in the repository " + appid);
         this.articleDataList.setValue(null);
-        Call<ArticleData> results;
-        results = this.gameAppIdService.getArticleData(appid);
-        //Log.d(TAG, "Here are the results:" + results);
+        Call<ArticleData> results = this.gameAppIdService.getArticleData(appid);
 
         results.enqueue(new Callback<ArticleData>() {
             @Override
             public void onResponse(Call<ArticleData> call, Response<ArticleData> response) {
-                if (response.code() == 200) {
-                    articleDataList.setValue(response.body().articleData);
-                    Log.d(TAG, "Here are the results:" + response.body());
-                } else {
-                    Log.d(TAG, "unsuccessful API request: " + call.request().url());
-                    Log.d(TAG, "  -- response status code: " + response.code());
-                    Log.d(TAG, "  -- response: " + response.toString());
-                }
+
+               // if(response.code() == 200){
+                    articleDataList.setValue(response.body().items);
+               //}
             }
 
             @Override
@@ -74,7 +64,6 @@ public class ArticleRepository {
                 t.printStackTrace();
             }
         });
-        return articleDataList;
 
     }
 
@@ -85,7 +74,7 @@ public class ArticleRepository {
 
     private boolean shouldFetchArticle(int appid) {
 
-        ArrayList<ArticleDataItem> currentArticle = this.articleDataList.getValue();
+        List<ArticleDataItem> currentArticle = this.articleDataList.getValue();
         if (currentArticle == null) {
             return true;
         }
