@@ -5,4 +5,10 @@
     <string name="pic">PIC</string>
     <string name="Username">username</string>
     <string name="SteamID">steamid</string>
+
+    <string name="game_search_box_hint">Search Games...</string>
+    <string name="game_search_button_text">Search</string>
+
+    <string name="action_game_search">Search and bookmark games</string>
+
 </resources>

@@ -3,6 +3,9 @@
     package="com.example.android.steamnews">
 
 
+    <uses-permission android:name="android.permission.INTERNET" />
+
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -12,8 +15,15 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SteamNews.NoActionBar"
         >
-        <activity android:name="com.example.android.steamnews.MainActivity" android:icon="@drawable/steam_icon">
 
+        <activity
+            android:name=".GameSearchActivity"
+            android:parentActivityName=".MainActivity"
+            android:launchMode="singleTop" />
+        <activity
+            android:name=".MainActivity"
+            android:launchMode="singleTop"
+			android:icon="@drawable/steam_icon">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
