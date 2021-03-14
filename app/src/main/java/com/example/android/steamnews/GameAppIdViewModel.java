@@ -34,8 +34,13 @@ public class GameAppIdViewModel extends AndroidViewModel {
     public LiveData<List<GameAppIdItem>> searchAppList(String query) {
         return this.repository.searchAppList(query);
     }
+    public LiveData<List<GameAppIdItem>> getBookmarkedGames() {
+        return this.repository.getBookmarkedGames();
+    }
 
     public void fetchAppList() {
         this.repository.fetchAppList();
     }
+
+
 }

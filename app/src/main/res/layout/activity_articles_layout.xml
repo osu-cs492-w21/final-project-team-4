@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout android:orientation="vertical"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -23,7 +22,7 @@
         android:layout_width="match_parent"
         android:layout_height="660dp"
         android:background="@color/background"
-        android:id="@+id/rv_game_title"/>
+        android:id="@+id/rv_articles"/>
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/bottom_toolbar"
