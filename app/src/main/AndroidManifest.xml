@@ -17,6 +17,10 @@
         >
 
         <activity
+            android:name=".TrendingActivity"
+            android:parentActivityName=".MainActivity"
+            android:launchMode="singleTop" />
+        <activity
             android:name=".GameSearchActivity"
             android:parentActivityName=".MainActivity"
             android:launchMode="singleTop" />
