@@ -78,6 +78,7 @@ public class Settings extends AppCompatActivity {
                     Log.d(Settings.class.getSimpleName(), "Setting Activity to Search");
                 }else if(item.getItemId() == R.id.home_icon){
                     Log.d(Settings.class.getSimpleName(), "Setting Activity to Home");
+                    openHomePage();
                 }else if(item.getItemId() == R.id.trending_icon){
                     Log.d(Settings.class.getSimpleName(), "Setting Activity to Trending");
                 }else if(item.getItemId() == R.id.account_icon){
@@ -93,6 +94,10 @@ public class Settings extends AppCompatActivity {
                 //               EditText editText = (EditText) findViewById(R.id.editText);
                 //         String message = editText.getText().toString();
 //                intent.putExtra(EXTRA_MESSAGE, message);
+                startActivity(profileIntent);
+            }
+            public void openHomePage() {
+                Intent profileIntent = new Intent(Settings.this, MainActivity.class);
                 startActivity(profileIntent);
             }
         });

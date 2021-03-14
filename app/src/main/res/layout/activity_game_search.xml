@@ -5,19 +5,25 @@
     android:layout_height="match_parent"
     android:layout_width="match_parent">
 
+
+
     <LinearLayout
+        android:background="@color/background"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
         tools:context=".GameSearchActivity"
         android:background="@color/background">
 
+
         <EditText
             android:id="@+id/et_game_search_box"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="22sp"
-            android:hint="@string/game_search_box_hint" />
+            android:textColor="@color/bar_icons"
+            android:background="@color/steam_icon"
+            android:hint="@string/game_search_box_hint"
+            android:textSize="22sp" />
 
         <Button
             android:id="@+id/btn_game_search"
@@ -27,17 +33,30 @@
             android:text="@string/game_search_button_text"
             android:textColor="@color/white"/>
 
+
         <FrameLayout
+            android:background="@color/background"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="638dp">
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_game_search_results"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="638dp"
                 />
 
+
         </FrameLayout>
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/bottom_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:background="@color/action_bar"
+            android:minHeight="?android:attr/actionBarSize"
+            android:theme="@android:style/ThemeOverlay.Material.Dark.ActionBar"
+            android:gravity="bottom"/>
 
     </LinearLayout>
 
