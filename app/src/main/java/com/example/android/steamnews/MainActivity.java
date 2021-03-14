@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.ActionBar;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -43,13 +44,21 @@ public class MainActivity extends AppCompatActivity {
                   Log.d(TAG, "Setting Activity to Home");
               }else if(item.getItemId() == R.id.trending_icon){
                   Log.d(TAG, "Setting Activity to Trending");
-              }else if(item.getItemId() == R.id.options_icon){
+              }else if(item.getItemId() == R.id.account_icon){
                   Log.d(TAG, "Setting Activity to Options");
+                  openProfilePage();
               }
               //else none of the id's match
                 return false;
             }
 
+            public void openProfilePage() {
+                Intent profileIntent = new Intent(MainActivity.this, Settings.class);
+ //               EditText editText = (EditText) findViewById(R.id.editText);
+       //         String message = editText.getText().toString();
+//                intent.putExtra(EXTRA_MESSAGE, message);
+                startActivity(profileIntent);
+            }
         });
     }
 

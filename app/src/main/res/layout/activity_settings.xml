@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".Settings"
+    android:orientation="vertical"
+    android:background="@color/background"
+    android:name="white">
+
+
+    <androidx.appcompat.widget.Toolbar
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/toolbar"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="?attr/actionBarSize"
+        android:background="@color/action_bar"
+        app:titleTextColor="@color/white">
+    </androidx.appcompat.widget.Toolbar>
+
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/bottom_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/action_bar"
+        android:layout_alignParentBottom="true"
+        android:minHeight="?android:attr/actionBarSize"
+        android:theme="@android:style/ThemeOverlay.Material.Dark.ActionBar"
+        android:gravity="bottom"/>
+
+
+
+    <ImageView
+        android:id="@+id/take_pic_iv"
+        android:layout_width="135dp"
+        android:layout_height="173dp"
+        android:layout_marginStart="130dp"
+        android:layout_marginTop="100dp"
+        android:contentDescription="@string/pic"
+        android:src="@drawable/add_pic"
+        app:showAsAction="always"
+        app:tint="@color/bar_icons" />
+
+    <ImageView
+        android:id="@+id/new_pic_iv"
+        android:layout_width="150dp"
+        android:layout_height="173dp"
+        android:layout_marginStart="120dp"
+        android:layout_marginTop="100dp"
+        android:contentDescription="@string/pic"
+        app:showAsAction="always" />
+
+    <TextView
+        android:id="@+id/username_text_id"
+        android:layout_width="101dp"
+        android:layout_height="31dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="360dp"
+        android:text="Username"
+        android:textColor="@color/bar_icons"
+        android:textSize="20sp" />
+
+    <EditText
+        android:id="@+id/editText1"
+        android:layout_width="204dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="130dp"
+        android:layout_marginTop="354dp"
+        android:hint="ex. JohnDoe12"
+        android:inputType="text"
+        android:textColorHint="#FF2DCD28"
+        android:textColor="#FFFFC107"
+        android:textSize="14sp"/>
+
+    <TextView
+        android:id="@+id/optional1_text_id"
+        android:layout_width="71dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="26dp"
+        android:layout_marginTop="390dp"
+        android:text="(optional)"
+        android:textColor="@color/bar_icons" />
+
+    <TextView
+        android:id="@+id/steamid_text_id"
+        android:layout_width="80dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="430dp"
+        android:text="SteamID"
+        android:textColor="@color/bar_icons"
+        android:textSize="20sp"/>
+
+    <TextView
+        android:id="@+id/optional2_text_id"
+        android:layout_width="71dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="26dp"
+        android:layout_marginTop="460dp"
+        android:text="(optional)"
+        android:textColor="@color/bar_icons" />
+
+    <EditText
+        android:id="@+id/editText2"
+        android:layout_width="191dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="130dp"
+        android:layout_marginTop="424dp"
+        android:hint="ex. STEAM_0:1:28497369"
+        android:inputType="text"
+        android:textColorHint="#FF2DCD28"
+        android:textColor="#FFFFC107"
+        android:textSize="14sp" />
+
+    <Button
+        android:id="@+id/submit_button"
+        android:layout_width="152dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="120dp"
+        android:layout_marginTop="530dp"
+        android:layout_gravity="center_horizontal|center|bottom"
+        android:text="Submit"
+        android:textColor="@color/bar_icons" />
+
+</RelativeLayout>

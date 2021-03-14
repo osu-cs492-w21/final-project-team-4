@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Steam News</string>
+    <string name="hello_this_is_second_page">Hello this is second page</string>
+    <string name="addpic">ADDPIC</string>
+    <string name="pic">PIC</string>
+    <string name="Username">username</string>
+    <string name="SteamID">steamid</string>
 </resources>
