@@ -11,4 +11,6 @@
     <color name="bar_icons">#869eaf</color>
     <color name="steam_icon">#1d6f94</color>
     <color name="action_bar">#171a21</color>
+    <color name="article_title_background">#1D6F94</color>
+
 </resources>

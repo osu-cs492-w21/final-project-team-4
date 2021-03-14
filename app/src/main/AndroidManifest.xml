@@ -21,6 +21,10 @@
             android:parentActivityName=".MainActivity"
             android:launchMode="singleTop" />
         <activity
+            android:name=".DetailedArticleActivity"
+            android:parentActivityName=".MainActivity"
+            android:launchMode="singleTop" />
+        <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"
 			android:icon="@drawable/steam_icon">

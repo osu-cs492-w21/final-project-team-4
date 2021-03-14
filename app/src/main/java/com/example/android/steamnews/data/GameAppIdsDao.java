@@ -9,6 +9,8 @@ import androidx.room.Query;
 
 import java.util.List;
 
+
+
 @Dao
 public interface GameAppIdsDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -31,5 +33,8 @@ public interface GameAppIdsDao {
 
     @Query("SELECT * FROM gameAppIdItems WHERE name LIKE :query ORDER BY name ASC")
     LiveData<List<GameAppIdItem>> search(String query);
+
+    @Query("SELECT * FROM gameAppIdItems WHERE bookmarked = 1")
+    LiveData<List<GameAppIdItem>> getBookmarkedGames();
 }
 

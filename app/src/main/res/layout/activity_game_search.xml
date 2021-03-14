@@ -12,7 +12,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        tools:context=".GameSearchActivity">
+        tools:context=".GameSearchActivity"
+        android:background="@color/background">
 
 
         <EditText
@@ -29,8 +30,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="4dp"
-            android:color="@color/steam_icon"
-            android:text="@string/game_search_button_text" />
+            android:text="@string/game_search_button_text"
+            android:textColor="@color/white"/>
+
 
         <FrameLayout
             android:background="@color/background"
@@ -41,7 +43,8 @@
                 android:id="@+id/rv_game_search_results"
                 android:layout_width="match_parent"
                 android:layout_height="638dp"
-                android:background="@color/background"/>
+                />
+
 
         </FrameLayout>
 
