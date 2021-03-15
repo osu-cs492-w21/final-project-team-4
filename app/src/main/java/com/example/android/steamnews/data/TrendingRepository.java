@@ -1,5 +1,6 @@
 package com.example.android.steamnews.data;
 
+import android.app.Application;
 import android.util.Log;
 
 import androidx.lifecycle.MutableLiveData;
@@ -19,57 +20,41 @@ public class TrendingRepository {
     private static final String TAG = TrendingRepository.class.getSimpleName();
     private static final String BASE_URL = "https://steamspy.com/";
 
-    private MutableLiveData<List<TrendingDataItem>> articleDataList;
+    private MutableLiveData<List<TrendingDataItem>> articleDataList2;
 
     private GameAppIdService gameAppIdService;
 
-    public TrendingRepository (){
-        this.articleDataList = new MutableLiveData<>();
-        this.articleDataList.setValue(null);
-
-
+    public TrendingRepository(Application application) {
+        AppDatabase db = AppDatabase.getDatabase(application);
+        //this.dao = db.gameAppIdsDao();
 
         Gson gson = new GsonBuilder()
-                .registerTypeAdapter(TrendingData.class, new TrendingData.JsonDeserializer())
+                .registerTypeAdapter(TrendingDataList.class, new TrendingDataList.JsonDeserializer())
                 .create();
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
         this.gameAppIdService = retrofit.create(GameAppIdService.class);
-
     }
+
+
+
     public MutableLiveData<List<TrendingDataItem>> getArticleData(){
-        return this.articleDataList;
-    }
-    public void loadArticleData(int appid) {
-
-
-        Log.d(TAG, "Fetching the articles for the appid: in the repository " + appid);
-        this.articleDataList.setValue(null);
-        Call<TrendingData> results = this.gameAppIdService.getTrendingData(appid);
-        Log.d(TAG, "Fetching the articles for the appid: in the repository " + appid);
-        results.enqueue(new Callback<TrendingData>() {
-            @Override
-            public void onResponse(Call<TrendingData> call, Response<TrendingData> response) {
-
-                // if(response.code() == 200){
-                articleDataList.setValue(response.body().items);
-                //}
-            }
-
-            @Override
-            public void onFailure(Call<TrendingData> call, Throwable t) {
-                Log.d(TAG, "unsuccessful API request: " + call.request().url());
-                t.printStackTrace();
-            }
-        });
-
+        return this.articleDataList2;
     }
 
+    public MutableLiveData<List<TrendingDataItem>>  getTrendingList() {
+        return this.articleDataList2;
+    }
 
+    public void fetchTrendingList() {
+        Log.d(TAG, "Fetching app list");
+        Call<TrendingData> results;
 
-
+        results = this.gameAppIdService.getTrendingData();
+        Log.d(TAG, "Called::: " + results);
+    }
 
 
 //    private boolean shouldFetchArticle(int appid) {

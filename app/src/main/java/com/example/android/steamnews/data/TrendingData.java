@@ -43,7 +43,8 @@ public class TrendingData {
                 for(int i=0; i <newsList.size(); i++){
                     JsonObject element = newsList.get(i).getAsJsonObject();
                     TrendingDataItem item = new TrendingDataItem(
-                            element.getAsJsonPrimitive("appid").getAsString()
+                            element.getAsJsonPrimitive("appid").getAsInt(),
+                            element.getAsJsonPrimitive("name").getAsString()
                     );
                     articleData.items.add(item);
                 }

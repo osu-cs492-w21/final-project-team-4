@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.android.steamnews.data.ArticleDataItem;
+import com.example.android.steamnews.data.GameAppIdItem;
 import com.example.android.steamnews.data.TrendingDataItem;
 
 import java.util.List;
@@ -31,33 +32,35 @@ public class TrendingActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_articles_layout);
-        this.articleDetailRV = findViewById(R.id.rv_articles);
-        this.articleDetailRV.setLayoutManager(new LinearLayoutManager(this));
-        this.articleDetailRV.setHasFixedSize(true);
+        setContentView(R.layout.activity_main);
 
-        this.articleAdapter = new TrendingAdapter(this);
-        this.articleDetailRV.setAdapter(articleAdapter);
-        this.viewModel = new ViewModelProvider(this)
-                .get(TrendingViewModel.class);
+        this.viewModel = new ViewModelProvider(
+                this,
+                new ViewModelProvider.AndroidViewModelFactory(getApplication())
+        ).get(TrendingViewModel.class);
 
-        int tempAppId = getIntent().getIntExtra("EXTRA_APPID", 0);
-        Log.d(TAG, "Here is the appid sent into the activity: " + tempAppId);
-        viewModel.loadArticles(tempAppId);
-
-        this.viewModel.getArticleData().observe(
+        this.viewModel.getBookmarkedGames().observe(
                 this,
                 new Observer<List<TrendingDataItem>>() {
                     @Override
-                    public void onChanged(List<TrendingDataItem> articleDataItems) {
-                        articleAdapter.updateSearchResults(articleDataItems);
+                    public void onChanged(List<TrendingDataItem> gameAppIdItems) {
+                        viewModel.fetchTrendingList();
+                        articleAdapter.updateSearchResults(gameAppIdItems);
                     }
                 }
         );
 
-        menutoolbar = (Toolbar) findViewById(R.id.bottom_toolbar);
-        menutoolbar.inflateMenu(R.menu.toolbar_menu_items);
-        menutoolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+        //toolbar object for the upper toolbar (where the title is set)
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        //set the icon next to the title to the Steam Icon
+        getSupportActionBar().setIcon(R.drawable.steam_icon);
+        //create a toolbar object for the bottom toolbar
+        Toolbar toolbarBottom = findViewById(R.id.bottom_toolbar);
+        toolbarBottom.inflateMenu(R.menu.toolbar_menu_items);
+        //Listeners for clicks on the buttons on the bottom of the screen.
+        //These can be used to switch between activities
+        toolbarBottom.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 if (item.getItemId() == R.id.search_icon) {
@@ -85,17 +88,26 @@ public class TrendingActivity extends AppCompatActivity
                 startActivity(profileIntent);
             }
         });
+
+        this.articleDetailRV=findViewById(R.id.rv_game_title);
+        this.articleDetailRV.setLayoutManager(new LinearLayoutManager(this));
+        this.articleDetailRV.setHasFixedSize(true);
+        this.articleAdapter= new TrendingAdapter(this);
+        this.articleDetailRV.setAdapter(this.articleAdapter);
     }
 
 
 
 
     @Override
-    public void onSearchResultClicked(TrendingDataItem articleDataItem) {
-        Log.d(TAG, "app id is: " + articleDataItem.appID);
-        //Log.d(TAG, "Here is the URL: " + articleDataItem.url);
-        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(articleDataItem.appID));
+    public void onTitleResultClicked(TrendingDataItem gameAppidItem) {
+        Log.d(TAG, "Clicked on the game: " + gameAppidItem.appID);
+        int temp = gameAppidItem.appID;
+        Log.d(TAG, "here is the appid in the main activity: " + temp);
+        Intent intent = new Intent(this, DetailedArticleActivity.class);
+        intent.putExtra("EXTRA_APPID", temp);
         startActivity(intent);
     }
+
 
 }

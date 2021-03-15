@@ -16,6 +16,5 @@ public interface GameAppIdService {
             @Query("appid") int appid);
 
     @GET("api.php?request=top100in2weeks/")
-    Call<TrendingData> getTrendingData(
-            @Query("appid") int appid);
+    Call<TrendingData> getTrendingData();
 }
