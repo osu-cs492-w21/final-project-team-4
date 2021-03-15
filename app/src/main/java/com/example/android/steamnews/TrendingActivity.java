@@ -1,30 +1,59 @@
 package com.example.android.steamnews;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.android.steamnews.data.GameAppIdItem;
+import com.example.android.steamnews.data.ArticleDataItem;
+import com.example.android.steamnews.data.TrendingDataItem;
+
+import java.util.List;
 
 public class TrendingActivity extends AppCompatActivity
-        implements GameSearchAdapter.OnSearchResultClickListener {
+        implements TrendingAdapter.OnSearchResultClickListener {
     private final static String TAG = TrendingActivity.class.getSimpleName();
     private Toolbar menutoolbar;
     private Toolbar toptoolbar;
-    private GameAppIdViewModel viewModel;
-    private GameSearchAdapter gameSearchAdapter;
+    private RecyclerView articleDetailRV;
+    private TrendingAdapter articleAdapter;
+    private TrendingViewModel viewModel;
+    private final TrendingActivity lifecycleowner = this;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_trending);
+        setContentView(R.layout.activity_articles_layout);
+        this.articleDetailRV = findViewById(R.id.rv_articles);
+        this.articleDetailRV.setLayoutManager(new LinearLayoutManager(this));
+        this.articleDetailRV.setHasFixedSize(true);
 
-        getTrending();
+        this.articleAdapter = new TrendingAdapter(this);
+        this.articleDetailRV.setAdapter(articleAdapter);
+        this.viewModel = new ViewModelProvider(this)
+                .get(TrendingViewModel.class);
+
+        int tempAppId = getIntent().getIntExtra("EXTRA_APPID", 0);
+        Log.d(TAG, "Here is the appid sent into the activity: " + tempAppId);
+        viewModel.loadArticles(tempAppId);
+
+        this.viewModel.getArticleData().observe(
+                this,
+                new Observer<List<TrendingDataItem>>() {
+                    @Override
+                    public void onChanged(List<TrendingDataItem> articleDataItems) {
+                        articleAdapter.updateSearchResults(articleDataItems);
+                    }
+                }
+        );
 
         menutoolbar = (Toolbar) findViewById(R.id.bottom_toolbar);
         menutoolbar.inflateMenu(R.menu.toolbar_menu_items);
@@ -58,19 +87,15 @@ public class TrendingActivity extends AppCompatActivity
         });
     }
 
-    private void getTrending() {
-        Log.d(TAG, "Getting Trending");
 
-    }
 
 
     @Override
-    public void onSearchResultClicked(GameAppIdItem gameAppidItem) {
-        gameAppidItem.bookmarked = !gameAppidItem.bookmarked;
-
-        this.viewModel.insertGameAppIdItem(gameAppidItem);
-
-        this.gameSearchAdapter.notifyDataSetChanged();
+    public void onSearchResultClicked(TrendingDataItem articleDataItem) {
+        Log.d(TAG, "app id is: " + articleDataItem.appID);
+        //Log.d(TAG, "Here is the URL: " + articleDataItem.url);
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(articleDataItem.appID));
+        startActivity(intent);
     }
 
 }
