@@ -2,6 +2,7 @@ package com.example.android.steamnews.data;
 
 import android.util.Log;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonElement;
@@ -12,7 +13,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 
 public class TrendingData {
-    private static final String TAG = ArticleData.class.getSimpleName();
+    private static final String TAG = TrendingData.class.getSimpleName();
     public ArrayList<TrendingDataItem> items;
 
 
@@ -33,22 +34,22 @@ public class TrendingData {
         public TrendingData deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
             Log.d(TAG, "Hrer is the json: " + json);
             JsonObject resultsObj = json.getAsJsonObject();
-            JsonObject appNewsListObj = resultsObj.getAsJsonObject("appnews");
-            Log.d(TAG, "Here is the appnews: " + appNewsListObj);
-            JsonArray newsList = appNewsListObj.getAsJsonArray("newsitems");
+            Log.d(TAG, "Hrer is the result: " + resultsObj);
+            //JsonObject appNewsListObj = resultsObj.getAsJsonObject("appnews");
+            //Log.d(TAG, "Here is the appnews: " + appNewsListObj);
+            Gson gson = new Gson();
+            JsonObject newsList = (JsonObject) resultsObj.getAsJsonObject("570").get("appid");
             Log.d(TAG, "Here is the newsitems: " + newsList);
 
             TrendingData articleData = new TrendingData();
-            if(newsList != null){
-                for(int i=0; i <newsList.size(); i++){
-                    JsonObject element = newsList.get(i).getAsJsonObject();
-                    TrendingDataItem item = new TrendingDataItem(
-                            element.getAsJsonPrimitive("appid").getAsInt(),
-                            element.getAsJsonPrimitive("name").getAsString()
-                    );
-                    articleData.items.add(item);
-                }
+            if (resultsObj != null){
+                //JsonObject element = resultsObj.getAsJsonObject();
+                TrendingDataItem item = new TrendingDataItem(
+                        resultsObj.getAsJsonPrimitive("appID").getAsInt(),
+                        resultsObj.getAsJsonPrimitive("name").getAsString());
+                articleData.items.add(item);
             }
+            Log.d(TAG, "Here is the articledata: " + articleData);
             return articleData;
         }
 

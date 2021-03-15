@@ -12,7 +12,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 
 public class TrendingDataList {
-    private static final String TAG = GameAppIdList.class.getSimpleName();
+    private static final String TAG = TrendingDataList.class.getSimpleName();
 
     public ArrayList<TrendingDataItem> items;
 

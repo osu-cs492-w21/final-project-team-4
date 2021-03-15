@@ -43,6 +43,10 @@ public class TrendingViewModel extends AndroidViewModel {
         return this.repository.getTrendingList();
     }
 
+    public void fetchAppList(){
+        this.repository.fetchAppList();
+    }
+
     public void fetchTrendingList() {
         this.repository.fetchTrendingList();
     }

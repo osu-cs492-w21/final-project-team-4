@@ -39,16 +39,18 @@ public class TrendingActivity extends AppCompatActivity
                 new ViewModelProvider.AndroidViewModelFactory(getApplication())
         ).get(TrendingViewModel.class);
 
-        this.viewModel.getBookmarkedGames().observe(
-                this,
-                new Observer<List<TrendingDataItem>>() {
-                    @Override
-                    public void onChanged(List<TrendingDataItem> gameAppIdItems) {
-                        viewModel.fetchTrendingList();
-                        articleAdapter.updateSearchResults(gameAppIdItems);
-                    }
-                }
-        );
+        this.viewModel.fetchAppList();
+
+//        this.viewModel.getBookmarkedGames().observe(
+//                this,
+//                new Observer<List<TrendingDataItem>>() {
+//                    @Override
+//                    public void onChanged(List<TrendingDataItem> gameAppIdItems) {
+//                        viewModel.fetchAppList();
+//                        articleAdapter.updateSearchResults(gameAppIdItems);
+//                    }
+//                }
+//        );
 
         //toolbar object for the upper toolbar (where the title is set)
         Toolbar toolbar = findViewById(R.id.toolbar);
