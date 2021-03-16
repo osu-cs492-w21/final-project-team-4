@@ -46,7 +46,7 @@ public class TrendingActivity extends AppCompatActivity
                 new Observer<List<TrendingDataItem>>() {
                     @Override
                     public void onChanged(List<TrendingDataItem> gameAppIdItems) {
-                        viewModel.fetchAppList();
+                        //viewModel.fetchAppList();
                         articleAdapter.updateSearchResults(gameAppIdItems);
                     }
                 }

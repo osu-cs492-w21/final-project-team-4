@@ -49,7 +49,7 @@ public class TrendingRepository {
     }
 
     public void fetchTrendingList() {
-        Log.d(TAG, "Fetching app list");
+        Log.d(TAG, "Fetching app");
         Call<TrendingData> results;
 
         results = this.gameAppIdService.getTrendingData();
