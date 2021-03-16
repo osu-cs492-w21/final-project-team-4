@@ -87,14 +87,14 @@ public class GameSearchActivity extends AppCompatActivity
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 if(item.getItemId() == R.id.search_icon){
-                    Log.d(Settings.class.getSimpleName(), "Setting Activity to Search");
+                    Log.d(TAG, "Setting Activity to Search");
                 }else if(item.getItemId() == R.id.home_icon){
-                    Log.d(Settings.class.getSimpleName(), "Setting Activity to Home");
+                    Log.d(TAG, "Setting Activity to Home");
                     openHomePage();
                 }else if(item.getItemId() == R.id.trending_icon){
-                    Log.d(Settings.class.getSimpleName(), "Setting Activity to Trending");
+                    Log.d(TAG, "Setting Activity to Trending");
                 }else if(item.getItemId() == R.id.account_icon){
-                    Log.d(Settings.class.getSimpleName(), "Setting Activity to Options");
+                    Log.d(TAG, "Setting Activity to Options");
                     openProfilePage();
                 }
                 //else none of the id's match

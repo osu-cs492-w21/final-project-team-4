@@ -81,6 +81,8 @@ implements GameTitleAdapter.OnSearchResultClickListener{
                   Log.d(TAG, "Setting Activity to Home");
               }else if(item.getItemId() == R.id.trending_icon){
                   Log.d(TAG, "Setting Activity to Trending");
+                  Intent intent = new Intent(MainActivity.this, TrendingActivity.class);
+                  startActivity(intent);
               }else if(item.getItemId() == R.id.account_icon){
                   Log.d(TAG, "Setting Activity to Options");
                   openProfilePage();
