@@ -19,6 +19,7 @@
         <activity
             android:name=".TrendingActivity"
             android:parentActivityName=".MainActivity"
+            android:label="Trending News"
             android:launchMode="singleTop" />
         <activity
             android:name=".GameSearchActivity"
@@ -41,6 +42,7 @@
 
         <activity
             android:name="com.example.android.steamnews.Settings"
+            android:label="My Profile"
             android:parentActivityName="com.example.android.steamnews.MainActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
