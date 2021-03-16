@@ -93,6 +93,8 @@ public class GameSearchActivity extends AppCompatActivity
                     openHomePage();
                 }else if(item.getItemId() == R.id.trending_icon){
                     Log.d(TAG, "Setting Activity to Trending");
+                    Intent profileIntent = new Intent(GameSearchActivity.this, TrendingActivity.class);
+                    startActivity(profileIntent);
                 }else if(item.getItemId() == R.id.account_icon){
                     Log.d(TAG, "Setting Activity to Options");
                     openProfilePage();

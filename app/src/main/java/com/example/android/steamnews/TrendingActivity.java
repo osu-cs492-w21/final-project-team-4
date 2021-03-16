@@ -67,6 +67,8 @@ public class TrendingActivity extends AppCompatActivity
             public boolean onMenuItemClick(MenuItem item) {
                 if (item.getItemId() == R.id.search_icon) {
                     Log.d(TAG, "Setting Activity to Search");
+                    Intent intent = new Intent(TrendingActivity.this, GameSearchActivity.class);
+                    startActivity(intent);
                 } else if (item.getItemId() == R.id.home_icon) {
                     Log.d(TAG, "Setting Activity to Home");
                     openHomePage();

@@ -76,11 +76,15 @@ public class Settings extends AppCompatActivity {
             public boolean onMenuItemClick(MenuItem item) {
                 if(item.getItemId() == R.id.search_icon){
                     Log.d(Settings.class.getSimpleName(), "Setting Activity to Search");
+                    Intent profileIntent = new Intent(Settings.this, GameSearchActivity.class);
+                    startActivity(profileIntent);
                 }else if(item.getItemId() == R.id.home_icon){
                     Log.d(Settings.class.getSimpleName(), "Setting Activity to Home");
                     openHomePage();
                 }else if(item.getItemId() == R.id.trending_icon){
                     Log.d(Settings.class.getSimpleName(), "Setting Activity to Trending");
+                    Intent profileIntent = new Intent(Settings.this, TrendingActivity.class);
+                    startActivity(profileIntent);
                 }else if(item.getItemId() == R.id.account_icon){
                     Log.d(Settings.class.getSimpleName(), "Setting Activity to Options");
                     openProfilePage();
