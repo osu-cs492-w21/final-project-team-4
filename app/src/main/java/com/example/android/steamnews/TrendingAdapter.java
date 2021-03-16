@@ -47,7 +47,7 @@ public class TrendingAdapter extends RecyclerView.Adapter<TrendingAdapter.Trendi
     public TrendingAdapter.TrendingViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int ViewType){
         Log.d(TAG, "inflate");
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        View view = inflater.inflate(R.layout.single_article_item, parent, false);
+        View view = inflater.inflate(R.layout.game_title_item, parent, false);
         return new TrendingAdapter.TrendingViewHolder(view);
     }
 
@@ -64,7 +64,7 @@ public class TrendingAdapter extends RecyclerView.Adapter<TrendingAdapter.Trendi
 
         TrendingViewHolder(View itemView) {
             super(itemView);
-            this.searchResultTV = itemView.findViewById(R.id.tv_game_search_result);
+            this.searchResultTV = itemView.findViewById(R.id.tv_game_title);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override

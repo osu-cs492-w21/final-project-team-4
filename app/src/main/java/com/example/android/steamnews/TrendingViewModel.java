@@ -7,6 +7,7 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.example.android.steamnews.data.ArticleRepository;
 import com.example.android.steamnews.data.GameAppIdItem;
 import com.example.android.steamnews.data.GameAppIdRepository;
 import com.example.android.steamnews.data.TrendingDataItem;
@@ -17,11 +18,16 @@ import java.util.List;
 public class TrendingViewModel extends AndroidViewModel {
     private TrendingRepository repository;
 
-    private LiveData<List<TrendingDataItem>> listLiveData2;
+    private LiveData<List<TrendingDataItem>> trendingLiveData;
 
     public TrendingViewModel(@NonNull Application application) {
         super(application);
         this.repository = new TrendingRepository(application);
+        this.trendingLiveData =this.repository.getArticleData();
+
+
+        //super(application);
+        //this.repository = new TrendingRepository(application);
     }
 
 //    public void insertGameAppIdItem(GameAppIdItem gameAppIdItem) {
@@ -40,7 +46,7 @@ public class TrendingViewModel extends AndroidViewModel {
 //        return this.repository.searchAppList(query);
 //    }
     public LiveData<List<TrendingDataItem>> getBookmarkedGames() {
-        return this.repository.getTrendingList();
+        return this.repository.getArticleData();
     }
 
     public void fetchAppList(){

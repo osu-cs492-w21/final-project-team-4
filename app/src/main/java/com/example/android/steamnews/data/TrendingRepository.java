@@ -21,11 +21,13 @@ public class TrendingRepository {
     private static final String TAG = TrendingRepository.class.getSimpleName();
     private static final String BASE_URL = "https://steamspy.com/";
 
-    private MutableLiveData<List<TrendingDataItem>> articleDataList2;
+    private MutableLiveData<List<TrendingDataItem>> trendingDataList;
 
     private GameAppIdService gameAppIdService;
 
     public TrendingRepository(Application application) {
+        this.trendingDataList = new MutableLiveData<>();
+        this.trendingDataList.setValue(null);
         Log.d(TAG, "trendrepo" + application);
         //AppDatabase db = AppDatabase.getDatabase(application);
         //this.dao = db.gameAppIdsDao();
@@ -42,13 +44,8 @@ public class TrendingRepository {
     }
 
 
-
-    public MutableLiveData<List<TrendingDataItem>> getArticleData(){
-        return this.articleDataList2;
-    }
-
-    public MutableLiveData<List<TrendingDataItem>>  getTrendingList() {
-        return this.articleDataList2;
+    public MutableLiveData<List<TrendingDataItem>>  getArticleData() {
+        return this.trendingDataList;
     }
 
     public void fetchTrendingList() {
@@ -73,7 +70,7 @@ public class TrendingRepository {
                 if (response.code() == 200) {
                     Log.d(TAG, "here is the url: "+call.request().url());
                     Log.d(TAG, "Fetched app list, now updating database" + response.body().items);
-                    //rewriteAll(response.body().items);
+                    trendingDataList.setValue(response.body().items);
                 } else {
                     Log.e(TAG, "Failed to fetch app list, response " + response.code());
                 }

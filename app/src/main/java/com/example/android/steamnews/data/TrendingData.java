@@ -38,18 +38,18 @@ public class TrendingData {
             //JsonObject appNewsListObj = resultsObj.getAsJsonObject("appnews");
             //Log.d(TAG, "Here is the appnews: " + appNewsListObj);
             Gson gson = new Gson();
-            JsonObject newsList = (JsonObject) resultsObj.getAsJsonObject("570").get("appid");
+            String newsList =  resultsObj.getAsJsonObject("570").get("name").getAsString();
             Log.d(TAG, "Here is the newsitems: " + newsList);
 
             TrendingData articleData = new TrendingData();
             if (resultsObj != null){
-                //JsonObject element = resultsObj.getAsJsonObject();
+                JsonObject element = resultsObj.getAsJsonObject("570");
                 TrendingDataItem item = new TrendingDataItem(
-                        resultsObj.getAsJsonPrimitive("appID").getAsInt(),
-                        resultsObj.getAsJsonPrimitive("name").getAsString());
+                        element.getAsJsonPrimitive("appid").getAsInt(),
+                        element.getAsJsonPrimitive("name").getAsString());
                 articleData.items.add(item);
             }
-            Log.d(TAG, "Here is the articledata: " + articleData);
+            Log.d(TAG, "Here is the articledata: " + articleData.items.get(0).name);
             return articleData;
         }
 
