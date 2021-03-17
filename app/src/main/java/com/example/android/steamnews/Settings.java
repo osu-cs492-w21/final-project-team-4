@@ -1,15 +1,13 @@
 package com.example.android.steamnews;
 
 import android.Manifest;
-import android.content.ActivityNotFoundException;
 import android.content.ContentValues;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.MenuItem;
@@ -17,29 +15,28 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.core.content.FileProvider;
-
-import java.io.File;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 public class Settings extends AppCompatActivity {
 
+    EditText usernameET, steamidET;
+    private ImageView newImage;
+    private ImageView addPicIcon;
     private Button submitb;
-    EditText etusername, etsteamid;
-    private ImageView imageView;
-    private Toolbar menutoolbar;
-    private Toolbar toptoolbar;
 
+    public static final String user_username = "username";
+    public static final String user_key = "username_key";
+
+    public static final String user_steamid = "steamid";
+    public static final String steam_key = "steamid_Key";
+
+    private SharedPreferences userPreferences;
+
+    // permission variables for camera
     private static final int PERMISSION_CODE = 1000;
     private static final int IMAGE_CAPTURE_CODE = 1001;
 
@@ -49,25 +46,25 @@ public class Settings extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-        ImageView imgClick;
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
 
-        // Capture the layout's TextView and set the string as its text
-        TextView textView1 = findViewById(R.id.editText1);
-        TextView textView2 = findViewById(R.id.editText2);
-        //  Intent intent = getIntent();
+        ImageView imgClick;
+        addPicIcon = findViewById(R.id.take_pic_iv);
+
+        usernameET = (EditText)findViewById(R.id.username_edittext);
+        steamidET = (EditText)findViewById(R.id.steamid_edittext);
 
 
-        toptoolbar = (Toolbar) findViewById(R.id.toolbar);
+        displayNewData();
+
+        // bottom toolbar with icons
+        Toolbar toptoolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toptoolbar);
         getSupportActionBar().setIcon(R.drawable.steam_icon);
 
-
-        menutoolbar = (Toolbar) findViewById(R.id.bottom_toolbar);
+        Toolbar menutoolbar = (Toolbar) findViewById(R.id.bottom_toolbar);
         menutoolbar.inflateMenu(R.menu.toolbar_menu_items);
-
 
         //Listeners for clicks on the buttons on the bottom of the screen.
         //These can be used to switch between activities
@@ -95,9 +92,6 @@ public class Settings extends AppCompatActivity {
 
             public void openProfilePage() {
                 Intent profileIntent = new Intent(Settings.this, Settings.class);
-                //               EditText editText = (EditText) findViewById(R.id.editText);
-                //         String message = editText.getText().toString();
-//                intent.putExtra(EXTRA_MESSAGE, message);
                 startActivity(profileIntent);
             }
             public void openHomePage() {
@@ -106,19 +100,27 @@ public class Settings extends AppCompatActivity {
             }
         });
 
-
-
-        imageView = (ImageView) findViewById(R.id.new_pic_iv);
+        newImage = (ImageView) findViewById(R.id.new_pic_iv);
 
         submitb = (Button) findViewById(R.id.submit_button);
-
         submitb.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-                etusername = (EditText) findViewById(R.id.editText1);
-                etsteamid = (EditText) findViewById(R.id.editText2);
-                // set the users input strings
-                textView1.setText(etusername.getText().toString());
-                textView2.setText(etsteamid.getText().toString());
+                String userName = usernameET.getText().toString();
+                String steamName = steamidET.getText().toString();
+
+                // for username
+                userPreferences = getSharedPreferences(user_username, MODE_PRIVATE);
+                SharedPreferences.Editor editor = userPreferences.edit();
+                editor.putString(user_key, userName);
+                editor.apply();
+
+                // for steam id
+                userPreferences = getSharedPreferences(user_steamid, MODE_PRIVATE);
+                editor = userPreferences.edit();
+                editor.putString(steam_key, steamName);
+                editor.apply();
+                // set the users new input strings
+                displayNewData();
             }
         });
 
@@ -151,6 +153,19 @@ public class Settings extends AppCompatActivity {
         });
     }
 
+    private void displayNewData() {
+
+        SharedPreferences preferenceshared = getSharedPreferences(user_username, MODE_PRIVATE);
+        String userName = preferenceshared.getString(user_key, null);
+
+        preferenceshared  = getSharedPreferences(user_steamid, MODE_PRIVATE);
+        String steamName =  preferenceshared.getString(steam_key, null);
+        //set edittext to new data that user entered
+        usernameET.setText(userName);
+        steamidET.setText(steamName);
+
+    }
+
     private void openCamera() {
         ContentValues values = new ContentValues();
         values.put(MediaStore.Images.Media.TITLE, "New Picture");
@@ -166,17 +181,14 @@ public class Settings extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         //this method is called, when user presses Allow or Deny from Permission Request Popup
-        switch (requestCode){
-            case PERMISSION_CODE:{
-                if (grantResults.length > 0 && grantResults[0] ==
-                        PackageManager.PERMISSION_GRANTED){
-                    //permission from popup was granted
-                    openCamera();
-                }
-                else {
-                    //permission from popup was denied
-                    Toast.makeText(this, "Permission denied...", Toast.LENGTH_SHORT).show();
-                }
+        if (requestCode == PERMISSION_CODE) {
+            if (grantResults.length > 0 && grantResults[0] ==
+                    PackageManager.PERMISSION_GRANTED) {
+                //permission from popup was granted
+                openCamera();
+            } else {
+                //permission from popup was denied
+                Toast.makeText(this, "Permission denied...", Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -187,7 +199,8 @@ public class Settings extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             //set the image captured to our ImageView
-            imageView.setImageURI(image_uri);
+            newImage.setImageURI(image_uri);
+            addPicIcon.setVisibility(View.GONE);
         }
     }
 
