@@ -3,6 +3,7 @@ package com.example.android.steamnews.data;
 import android.app.Application;
 import android.util.Log;
 
+import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;
 
 import com.google.gson.Gson;
@@ -10,6 +11,8 @@ import com.google.gson.GsonBuilder;
 
 import java.util.List;
 
+import io.reactivex.rxjava3.core.Flowable;
+import io.reactivex.rxjava3.core.Single;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -22,6 +25,11 @@ public class GameAppIdRepository {
 
     private GameAppIdsDao dao;
     private GameAppIdService gameAppIdService;
+
+    public interface OnFetchAppListCallback {
+        void onSuccess(List<GameAppIdItem> items);
+        void onFailure(Throwable throwable);
+    }
 
     public GameAppIdRepository(Application application) {
         AppDatabase db = AppDatabase.getDatabase(application);
@@ -46,12 +54,23 @@ public class GameAppIdRepository {
         });
     }
 
-    private void rewriteAll(List<GameAppIdItem> gameAppIdItems) {
+    private void rewriteAll(List<GameAppIdItem> gameAppIdItems, @Nullable OnFetchAppListCallback onFetchAppListCallback) {
         AppDatabase.databaseWriteExecutor.execute(new Runnable() {
             @Override
             public void run() {
-                dao.deleteAll();
-                dao.insertAll(gameAppIdItems);
+                try {
+                    dao.deleteAll();
+                    dao.insertAll(gameAppIdItems);
+
+                    if (onFetchAppListCallback != null) {
+                        onFetchAppListCallback.onSuccess(gameAppIdItems);
+                    }
+                } catch (Throwable t) {
+                    if (onFetchAppListCallback != null) {
+                        onFetchAppListCallback.onFailure(t);
+                    }
+                    throw t;
+                }
             }
         });
     }
@@ -64,15 +83,15 @@ public class GameAppIdRepository {
         return this.dao.getBookmarkedGames();
     }
 
-    public LiveData<List<GameAppIdItem>> searchAppList(String query) {
+    public Single<List<GameAppIdItem>> searchAppList(String query) {
         return this.dao.search("%" + query + "%");
     }
 
-    public LiveData<Integer> countGameAppIdItems() {
+    public Single<Integer> countGameAppIdItems() {
         return this.dao.getRowCount();
     }
 
-    public void fetchAppList() {
+    public void fetchAppList(@Nullable OnFetchAppListCallback onFetchAppListCallback) {
         Log.d(TAG, "Fetching app list");
         Call<GameAppIdList> results;
 
@@ -83,15 +102,21 @@ public class GameAppIdRepository {
             public void onResponse(Call<GameAppIdList> call, Response<GameAppIdList> response) {
                 if (response.code() == 200) {
                     Log.d(TAG, "Fetched app list, now updating database");
-                    rewriteAll(response.body().items);
+                    rewriteAll(response.body().items, onFetchAppListCallback);
                 } else {
                     Log.e(TAG, "Failed to fetch app list, response " + response.code());
+                    if (onFetchAppListCallback != null) {
+                        onFetchAppListCallback.onFailure(new Throwable("API response code " + response.code()));
+                    }
                 }
             }
 
             @Override
             public void onFailure(Call<GameAppIdList> call, Throwable t) {
                 t.printStackTrace();
+                if (onFetchAppListCallback != null) {
+                    onFetchAppListCallback.onFailure(t);
+                }
             }
         });
     }

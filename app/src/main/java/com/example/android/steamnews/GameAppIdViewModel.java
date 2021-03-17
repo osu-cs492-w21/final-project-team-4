@@ -3,6 +3,7 @@ package com.example.android.steamnews;
 import android.app.Application;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
@@ -10,6 +11,9 @@ import com.example.android.steamnews.data.GameAppIdItem;
 import com.example.android.steamnews.data.GameAppIdRepository;
 
 import java.util.List;
+
+import io.reactivex.rxjava3.core.Flowable;
+import io.reactivex.rxjava3.core.Single;
 
 public class GameAppIdViewModel extends AndroidViewModel {
     private GameAppIdRepository repository;
@@ -23,7 +27,7 @@ public class GameAppIdViewModel extends AndroidViewModel {
         this.repository.insertGameAppIdItem(gameAppIdItem);
     }
 
-    public LiveData<Integer> countGameAppIdItems() {
+    public Single<Integer> countGameAppIdItems() {
         return this.repository.countGameAppIdItems();
     }
 
@@ -31,15 +35,15 @@ public class GameAppIdViewModel extends AndroidViewModel {
         return this.repository.getAppList();
     }
 
-    public LiveData<List<GameAppIdItem>> searchAppList(String query) {
+    public Single<List<GameAppIdItem>> searchAppList(String query) {
         return this.repository.searchAppList(query);
     }
     public LiveData<List<GameAppIdItem>> getBookmarkedGames() {
         return this.repository.getBookmarkedGames();
     }
 
-    public void fetchAppList() {
-        this.repository.fetchAppList();
+    public void fetchAppList(@Nullable GameAppIdRepository.OnFetchAppListCallback onFetchAppListCallback) {
+        this.repository.fetchAppList(onFetchAppListCallback);
     }
 
 

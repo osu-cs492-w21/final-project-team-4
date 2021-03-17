@@ -11,4 +11,10 @@
 
     <string name="action_game_search">Search and bookmark games</string>
 
+    <string name="game_search_empty_query_warning">Please enter the name of a game to search</string>
+    <string name="game_search_loading_text_fetch">Downloading list of Steam games\n\nThis may take a few seconds\nbut only needs to happen once</string>
+    <string name="game_search_loading_text_search">Searching...</string>
+    <string name="game_search_loading_text_start" />
+    <string name="game_search_error_text">Unable to fetch data. Please check your internet connection.\n\nError message: %1$s</string>
+
 </resources>

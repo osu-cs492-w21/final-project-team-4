@@ -12,8 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        tools:context=".GameSearchActivity"
-        >
+        tools:context=".GameSearchActivity">
 
 
         <EditText
@@ -42,9 +41,40 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_game_search_results"
                 android:layout_width="match_parent"
-                android:layout_height="638dp"
-                />
+                android:layout_height="638dp" />
 
+            <TextView
+                android:id="@+id/tv_error_message"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="16dp"
+                android:textAppearance="?attr/textAppearanceBody1"
+                android:textColor="?attr/colorError"
+                android:visibility="invisible"/>
+
+            <LinearLayout
+                android:id="@+id/ll_loading_indicator"
+                android:background="@color/background"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:visibility="invisible">
+                <ProgressBar
+                    android:id="@+id/pb_loading_indicator"
+                    android:layout_width="72dp"
+                    android:layout_height="72dp"
+                    android:layout_marginTop="32dp"
+                    android:layout_gravity="top|center_horizontal"/>
+                <TextView
+                    android:id="@+id/tv_loading_indicator"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="16dp"
+                    android:textAppearance="?attr/textAppearanceBody1"
+                    android:textColor="?attr/colorSecondary"
+                    android:textAlignment="center"
+                    android:layout_gravity="top|center_horizontal"/>
+            </LinearLayout>
 
         </FrameLayout>
 

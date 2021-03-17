@@ -9,6 +9,8 @@ import androidx.room.Query;
 
 import java.util.List;
 
+import io.reactivex.rxjava3.core.Flowable;
+import io.reactivex.rxjava3.core.Single;
 
 
 @Dao
@@ -26,13 +28,13 @@ public interface GameAppIdsDao {
     void deleteAll();
 
     @Query("SELECT COUNT(appid) FROM gameAppIdItems")
-    LiveData<Integer> getRowCount();
+    Single<Integer> getRowCount();
 
     @Query("SELECT * FROM gameAppIdItems ORDER BY name ASC")
     LiveData<List<GameAppIdItem>> getAll();
 
     @Query("SELECT * FROM gameAppIdItems WHERE name LIKE :query ORDER BY name ASC")
-    LiveData<List<GameAppIdItem>> search(String query);
+    Single<List<GameAppIdItem>> search(String query);
 
     @Query("SELECT * FROM gameAppIdItems WHERE bookmarked = 1")
     LiveData<List<GameAppIdItem>> getBookmarkedGames();
