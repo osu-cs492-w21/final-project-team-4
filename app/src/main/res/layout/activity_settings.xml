@@ -11,7 +11,6 @@
 
 
     <androidx.appcompat.widget.Toolbar
-        xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/toolbar"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
@@ -42,7 +41,7 @@
         android:contentDescription="@string/pic"
         android:src="@drawable/add_pic"
         app:showAsAction="always"
-        app:tint="@color/bar_icons" />
+        app:tint="@color/steam_icon" />
 
     <ImageView
         android:id="@+id/new_pic_iv"
@@ -64,7 +63,7 @@
         android:textSize="20sp" />
 
     <EditText
-        android:id="@+id/editText1"
+        android:id="@+id/username_edittext"
         android:layout_width="204dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="130dp"
@@ -104,15 +103,15 @@
         android:textColor="@color/bar_icons" />
 
     <EditText
-        android:id="@+id/editText2"
-        android:layout_width="191dp"
+        android:id="@+id/steamid_edittext"
+        android:layout_width="203dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="130dp"
         android:layout_marginTop="424dp"
         android:hint="ex. STEAM_0:1:28497369"
         android:inputType="text"
-        android:textColorHint="#FF2DCD28"
         android:textColor="#FFFFC107"
+        android:textColorHint="#FF2DCD28"
         android:textSize="14sp" />
 
     <Button
