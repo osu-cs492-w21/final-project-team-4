@@ -28,6 +28,7 @@
         <activity
             android:name=".DetailedArticleActivity"
             android:parentActivityName=".MainActivity"
+	    android:label="Article News"
             android:launchMode="singleTop" />
         <activity
             android:name=".MainActivity"
