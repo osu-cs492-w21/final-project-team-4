@@ -4,8 +4,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -74,21 +76,24 @@ public class GameSearchActivity extends AppCompatActivity
         this.gameSearchAdapter = new GameSearchAdapter(this);
         this.searchResultsRV.setAdapter(this.gameSearchAdapter);
 
+        // Set up search button in keyboard to perform a search
+        this.searchBoxET.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction (TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                    performSearch();
+                    return true;
+                }
+                return false;
+            }
+        });
+
+        // Set up search button in UI to perform a search
         this.searchButton = findViewById(R.id.btn_game_search);
-        GameSearchActivity test = this;
         this.searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String searchQuery = searchBoxET.getText().toString().trim();
-                if (TextUtils.isEmpty(searchQuery)) {
-                    if (warningToast != null) {
-                        warningToast.cancel();
-                    }
-                    warningToast = Toast.makeText(test, getString(R.string.game_search_empty_query_warning), Toast.LENGTH_SHORT);
-                    warningToast.show();
-                } else {
-                    searchGameList(searchQuery);
-                }
+                performSearch();
             }
         });
 
@@ -103,6 +108,19 @@ public class GameSearchActivity extends AppCompatActivity
         super.onStop();
 
         this.disposable.clear();
+    }
+
+    private void performSearch() {
+        String searchQuery = searchBoxET.getText().toString().trim();
+        if (TextUtils.isEmpty(searchQuery)) {
+            if (warningToast != null) {
+                warningToast.cancel();
+            }
+            warningToast = Toast.makeText(this, getString(R.string.game_search_empty_query_warning), Toast.LENGTH_SHORT);
+            warningToast.show();
+        } else {
+            searchGameList(searchQuery);
+        }
     }
 
     private void searchGameList(String searchQuery) {

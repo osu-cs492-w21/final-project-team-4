@@ -22,7 +22,9 @@
             android:textColor="@color/bar_icons"
             android:background="@color/steam_icon"
             android:hint="@string/game_search_box_hint"
-            android:textSize="22sp" />
+            android:textSize="22sp"
+            android:imeOptions="actionSearch"
+            android:inputType="text"/>
 
         <Button
             android:id="@+id/btn_game_search"
