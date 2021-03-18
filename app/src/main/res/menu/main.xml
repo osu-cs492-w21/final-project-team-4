@@ -6,9 +6,4 @@
         android:title="@string/action_filter_news"
         android:icon="@drawable/ic_filter_news"
         app:showAsAction="ifRoom" />
-
-    <item android:id="@+id/action_game_search"
-        android:title="@string/action_game_search"
-        android:icon="@drawable/ic_action_game_search"
-        app:showAsAction="ifRoom" />
 </menu>

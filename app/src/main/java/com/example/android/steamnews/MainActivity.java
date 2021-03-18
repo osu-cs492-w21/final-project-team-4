@@ -4,7 +4,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -19,6 +18,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+
 
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
@@ -67,6 +67,7 @@ implements GameTitleAdapter.OnSearchResultClickListener {
     //rv for listing the titles of games
     private RecyclerView rvArticleView;
     private GameTitleAdapter titleAdapter;
+    private LinearLayout dimLayout;
     private GameAppIdViewModel viewModel;
     private PlayedGameViewModel playedGameViewModel;
 
@@ -139,6 +140,7 @@ implements GameTitleAdapter.OnSearchResultClickListener {
 
 
         });
+        this.dimLayout = findViewById(R.id.dim_layout);
         this.rvArticleView = findViewById(R.id.rv_game_title);
         this.rvArticleView.setLayoutManager(new LinearLayoutManager(this));
         this.rvArticleView.setHasFixedSize(true);
@@ -165,10 +167,6 @@ implements GameTitleAdapter.OnSearchResultClickListener {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.action_game_search:
-                Intent intent = new Intent(this, GameSearchActivity.class); // TODO get rid of this
-                startActivity(intent);
-                return true;
             case R.id.action_filter_news:
                 openFilterNewsPopup();
                 return true;
@@ -198,6 +196,13 @@ implements GameTitleAdapter.OnSearchResultClickListener {
                 LinearLayout.LayoutParams.WRAP_CONTENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT,
                 true); // Let taps outside the popup dismiss it
+
+        popupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
+            @Override
+            public void onDismiss() {
+                dimLayout.setVisibility(View.INVISIBLE);
+            }
+        });
 
         // Set up click listeners for each kind of filter
 
@@ -229,6 +234,7 @@ implements GameTitleAdapter.OnSearchResultClickListener {
         });
 
         // Show popup window
+        this.dimLayout.setVisibility(View.VISIBLE);
         popupWindow.showAtLocation(findViewById(R.id.main_content), Gravity.CENTER, 0, 0);
     }
 
