@@ -1,5 +1,7 @@
 package com.example.android.steamnews.data;
 
+import android.util.Log;
+
 import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonElement;
@@ -10,7 +12,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 
 public class PlayedGameDataList {
-    private static final String TAG = GameAppIdList.class.getSimpleName();
+    private static final String TAG = PlayedGameDataList.class.getSimpleName();
 
     public ArrayList<PlayedGameData> items;
 
@@ -32,9 +34,8 @@ public class PlayedGameDataList {
                     JsonObject element = gameList.get(i).getAsJsonObject();
                     PlayedGameData item = new PlayedGameData(
                             element.getAsJsonPrimitive("appid").getAsInt(),
-                            element.getAsJsonPrimitive("name").getAsString(),
-                            element.getAsJsonPrimitive("playtime_2weeks").getAsInt(),
-                            element.getAsJsonPrimitive("playtime_forever").getAsInt());
+                            element.getAsJsonPrimitive("playtime_forever").getAsInt(),
+                            false);
                     playedGameDataList.items.add(item);
                 }
             }

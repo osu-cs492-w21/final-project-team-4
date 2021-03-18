@@ -38,5 +38,8 @@ public interface GameAppIdsDao {
 
     @Query("SELECT * FROM gameAppIdItems WHERE bookmarked = 1")
     LiveData<List<GameAppIdItem>> getBookmarkedGames();
+
+    @Query("SELECT * FROM gameAppIdItems WHERE bookmarked = 1")
+    Single<List<GameAppIdItem>> getBookmarkedGamesOneShot();
 }
 

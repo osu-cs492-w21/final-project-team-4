@@ -1,24 +1,35 @@
 package com.example.android.steamnews.data;
 
+import androidx.annotation.NonNull;
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.Ignore;
+import androidx.room.PrimaryKey;
+
 import com.google.gson.annotations.SerializedName;
 
+@Entity(tableName = "playedGameData")
 public class PlayedGameData {
+    @PrimaryKey
+    @NonNull
     @SerializedName("appid")
     public int appId;
 
-    @SerializedName("name")
-    public String name;
-
-    @SerializedName("playtime_2weeks")
-    public int playtime2Weeks;
-
+    @ColumnInfo(defaultValue = "0")
     @SerializedName("playtime_forever")
     public int playtimeForever;
 
-    public PlayedGameData(int appId, String name, int playtime2Weeks, int playtimeForever) {
+    @NonNull
+    public boolean recentlyPlayed; // True if recently played, false if just owned
+
+    @Ignore
+    public PlayedGameData(@NonNull int appId, int playtimeForever, boolean recentlyPlayed) {
         this.appId = appId;
-        this.name = name;
-        this.playtime2Weeks = playtime2Weeks;
         this.playtimeForever = playtimeForever;
+        this.recentlyPlayed = recentlyPlayed;
+    }
+
+    public PlayedGameData() {
+        this(0, 0, false);
     }
 }

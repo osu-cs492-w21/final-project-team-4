@@ -23,10 +23,17 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.android.steamnews.data.GameAppIdItem;
+import com.example.android.steamnews.data.OnDatabaseActionCompleteCallback;
 
 import java.util.List;
+
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.core.Single;
+import io.reactivex.rxjava3.disposables.CompositeDisposable;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class MainActivity extends AppCompatActivity
 implements GameTitleAdapter.OnSearchResultClickListener{
@@ -65,6 +72,16 @@ implements GameTitleAdapter.OnSearchResultClickListener{
 
     private SharedPreferences sharedPreferences;
 
+    private Toast toast;
+
+    private final CompositeDisposable disposable = new CompositeDisposable();
+
+    private enum FilterMode {
+        Bookmarked,
+        Owned,
+        RecentlyPlayed
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,16 +92,8 @@ implements GameTitleAdapter.OnSearchResultClickListener{
                 this,
                 new ViewModelProvider.AndroidViewModelFactory(getApplication())
         ).get(GameAppIdViewModel.class);
-        this.viewModel.getBookmarkedGames().observe(
-               this,
-               new Observer<List<GameAppIdItem>>() {
-                   @Override
-                   public void onChanged(List<GameAppIdItem> gameAppIdItems) {
-                       viewModel.getBookmarkedGames();
-                       titleAdapter.updateSearchResults(gameAppIdItems);
-                   }
-               }
-       );
+
+        filterNews(FilterMode.Bookmarked);
 
        this.playedGameViewModel = new ViewModelProvider(this).get(PlayedGameViewModel.class);
 
@@ -140,6 +149,13 @@ implements GameTitleAdapter.OnSearchResultClickListener{
     }
 
     @Override
+    protected void onStop() {
+        super.onStop();
+
+        this.disposable.clear();
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
@@ -183,6 +199,46 @@ implements GameTitleAdapter.OnSearchResultClickListener{
                 LinearLayout.LayoutParams.WRAP_CONTENT,
                 true); // Let taps outside the popup dismiss it
 
+        TextView bookmarkedGamesFilter = popupView.findViewById(R.id.tv_filter_bookmarked_games);
+        bookmarkedGamesFilter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                filterNews(FilterMode.Bookmarked);
+                popupWindow.dismiss();
+            }
+        });
+
+        TextView ownedGamesFilter = popupView.findViewById(R.id.tv_filter_owned_games);
+        ownedGamesFilter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                filterNews(FilterMode.Owned);
+                popupWindow.dismiss();
+            }
+        });
+
+        TextView recentlyPlayedGamesFilter = popupView.findViewById(R.id.tv_filter_recent_games);
+        recentlyPlayedGamesFilter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                filterNews(FilterMode.RecentlyPlayed);
+                popupWindow.dismiss();
+            }
+        });
+
+        // Show popup window
+        popupWindow.showAtLocation(findViewById(R.id.main_content), Gravity.CENTER, 0, 0);
+    }
+
+    private void filterNews(FilterMode filterMode) {
+        Log.d(TAG, "Filtering games using filter mode: " + filterMode.toString());
+
+        if (filterMode == FilterMode.Bookmarked) {
+
+            updateRecyclerView(viewModel.getBookmarkedGamesOneShot(), filterMode);
+            return;
+        }
+
         String steamId = sharedPreferences.getString(
                 getString(R.string.pref_user_steamid_key),
                 null
@@ -190,18 +246,44 @@ implements GameTitleAdapter.OnSearchResultClickListener{
 
         if (steamId == null) {
             Log.w(TAG, "Steam ID is null");
+            toastMissingSteamId();
+            return;
         }
 
-        TextView bookmarkedGamesFilter = popupView.findViewById(R.id.tv_filter_bookmarked_games);
-        bookmarkedGamesFilter.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d(TAG, "Filter bookmarked games");
-                popupWindow.dismiss();
-            }
-        });
+        this.playedGameViewModel.loadData(STEAM_API_KEY, steamId, new OnDatabaseActionCompleteCallback() {
+                    @Override
+                    public void onSuccess() {
+                        if (filterMode == FilterMode.Owned) {
+                            updateRecyclerView(playedGameViewModel.getOwnedGameAppIds(), filterMode);
+                        } else {
+                            updateRecyclerView(playedGameViewModel.getRecentlyPlayedGameAppIds(), filterMode);
+                        }
+                    }
 
-        // Show popup window
-        popupWindow.showAtLocation(findViewById(R.id.main_content), Gravity.CENTER, 0, 0);
+                    @Override
+                    public void onFailure(Throwable throwable) {
+                        Log.d(TAG, "Failed to load played game data");
+                    }
+                });
+    }
+
+    private void updateRecyclerView(Single<List<GameAppIdItem>> data, FilterMode filterMode) {
+        disposable.add(data
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        playedGameData -> {
+                            Log.d(TAG, "Filtered news using mode: " + filterMode.toString());
+                            titleAdapter.updateSearchResults(playedGameData);
+                        },
+                        throwable -> Log.e(TAG, "Unable to filter news using mode: " + filterMode.toString(), throwable)));
+    }
+
+    private void toastMissingSteamId() {
+        if (toast != null) {
+            toast.cancel();
+        }
+        toast = Toast.makeText(this, getString(R.string.missing_steamid_warning), Toast.LENGTH_LONG);
+        toast.show();
     }
 }

@@ -9,10 +9,10 @@ import androidx.lifecycle.LiveData;
 
 import com.example.android.steamnews.data.GameAppIdItem;
 import com.example.android.steamnews.data.GameAppIdRepository;
+import com.example.android.steamnews.data.OnDatabaseActionCompleteCallback;
 
 import java.util.List;
 
-import io.reactivex.rxjava3.core.Flowable;
 import io.reactivex.rxjava3.core.Single;
 
 public class GameAppIdViewModel extends AndroidViewModel {
@@ -42,8 +42,12 @@ public class GameAppIdViewModel extends AndroidViewModel {
         return this.repository.getBookmarkedGames();
     }
 
-    public void fetchAppList(@Nullable GameAppIdRepository.OnFetchAppListCallback onFetchAppListCallback) {
-        this.repository.fetchAppList(onFetchAppListCallback);
+    public Single<List<GameAppIdItem>> getBookmarkedGamesOneShot() {
+        return this.repository.getBookmarkedGamesOneShot();
+    }
+
+    public void fetchAppList(@Nullable OnDatabaseActionCompleteCallback onDatabaseActionCompleteCallback) {
+        this.repository.fetchAppList(onDatabaseActionCompleteCallback);
     }
 
 

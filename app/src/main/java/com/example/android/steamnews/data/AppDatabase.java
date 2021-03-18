@@ -9,7 +9,7 @@ import androidx.room.RoomDatabase;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-@Database(entities = {GameAppIdItem.class}, version = 1, exportSchema = false)
+@Database(entities = {GameAppIdItem.class, PlayedGameData.class}, version = 1, exportSchema = false)
 public abstract class AppDatabase extends RoomDatabase {
     private static volatile AppDatabase INSTANCE;
 
@@ -17,6 +17,8 @@ public abstract class AppDatabase extends RoomDatabase {
     static final ExecutorService databaseWriteExecutor = Executors.newFixedThreadPool(NUM_THREADS);
 
     public abstract GameAppIdsDao gameAppIdsDao();
+
+    public abstract PlayedGameDataDao playedGameDataDao();
 
     static AppDatabase getDatabase(final Context context) {
         if (INSTANCE == null) {

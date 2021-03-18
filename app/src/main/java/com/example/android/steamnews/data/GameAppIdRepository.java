@@ -21,11 +21,6 @@ public class GameAppIdRepository {
     private GameAppIdsDao dao;
     private GameAppIdService gameAppIdService;
 
-    public interface OnFetchAppListCallback {
-        void onSuccess(List<GameAppIdItem> items);
-        void onFailure(Throwable throwable);
-    }
-
     public GameAppIdRepository(Application application) {
         AppDatabase db = AppDatabase.getDatabase(application);
         this.dao = db.gameAppIdsDao();
@@ -42,7 +37,7 @@ public class GameAppIdRepository {
         });
     }
 
-    private void rewriteAll(List<GameAppIdItem> gameAppIdItems, @Nullable OnFetchAppListCallback onFetchAppListCallback) {
+    private void rewriteAll(List<GameAppIdItem> gameAppIdItems, @Nullable OnDatabaseActionCompleteCallback onDatabaseActionCompleteCallback) {
         AppDatabase.databaseWriteExecutor.execute(new Runnable() {
             @Override
             public void run() {
@@ -50,12 +45,12 @@ public class GameAppIdRepository {
                     dao.deleteAll();
                     dao.insertAll(gameAppIdItems);
 
-                    if (onFetchAppListCallback != null) {
-                        onFetchAppListCallback.onSuccess(gameAppIdItems);
+                    if (onDatabaseActionCompleteCallback != null) {
+                        onDatabaseActionCompleteCallback.onSuccess();
                     }
                 } catch (Throwable t) {
-                    if (onFetchAppListCallback != null) {
-                        onFetchAppListCallback.onFailure(t);
+                    if (onDatabaseActionCompleteCallback != null) {
+                        onDatabaseActionCompleteCallback.onFailure(t);
                     }
                     throw t;
                 }
@@ -71,6 +66,10 @@ public class GameAppIdRepository {
         return this.dao.getBookmarkedGames();
     }
 
+    public Single<List<GameAppIdItem>> getBookmarkedGamesOneShot() {
+        return this.dao.getBookmarkedGamesOneShot();
+    }
+
     public Single<List<GameAppIdItem>> searchAppList(String query) {
         return this.dao.search("%" + query + "%");
     }
@@ -79,7 +78,7 @@ public class GameAppIdRepository {
         return this.dao.getRowCount();
     }
 
-    public void fetchAppList(@Nullable OnFetchAppListCallback onFetchAppListCallback) {
+    public void fetchAppList(@Nullable OnDatabaseActionCompleteCallback onDatabaseActionCompleteCallback) {
         Log.d(TAG, "Fetching app list");
         Call<GameAppIdList> results;
 
@@ -89,12 +88,12 @@ public class GameAppIdRepository {
             @Override
             public void onResponse(Call<GameAppIdList> call, Response<GameAppIdList> response) {
                 if (response.code() == 200) {
-                    Log.d(TAG, "Fetched app list, now updating database");
-                    rewriteAll(response.body().items, onFetchAppListCallback);
+                    Log.d(TAG, "Fetched app list, now populating database with " + response.body().items.size() + " items");
+                    rewriteAll(response.body().items, onDatabaseActionCompleteCallback);
                 } else {
                     Log.e(TAG, "Failed to fetch app list, response " + response.code());
-                    if (onFetchAppListCallback != null) {
-                        onFetchAppListCallback.onFailure(new Throwable("API response code " + response.code()));
+                    if (onDatabaseActionCompleteCallback != null) {
+                        onDatabaseActionCompleteCallback.onFailure(new Throwable("API response code " + response.code()));
                     }
                 }
             }
@@ -102,8 +101,8 @@ public class GameAppIdRepository {
             @Override
             public void onFailure(Call<GameAppIdList> call, Throwable t) {
                 t.printStackTrace();
-                if (onFetchAppListCallback != null) {
-                    onFetchAppListCallback.onFailure(t);
+                if (onDatabaseActionCompleteCallback != null) {
+                    onDatabaseActionCompleteCallback.onFailure(t);
                 }
             }
         });

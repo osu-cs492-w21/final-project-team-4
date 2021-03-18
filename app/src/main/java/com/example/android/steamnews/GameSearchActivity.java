@@ -21,7 +21,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.android.steamnews.data.GameAppIdItem;
-import com.example.android.steamnews.data.GameAppIdRepository;
+import com.example.android.steamnews.data.OnDatabaseActionCompleteCallback;
 
 import java.util.List;
 
@@ -215,23 +215,19 @@ public class GameSearchActivity extends AppCompatActivity
     private void fetchAppList() {
         showLoadingIndicator(getString(R.string.game_search_loading_text_fetch));
 
-        this.viewModel.fetchAppList(new GameAppIdRepository.OnFetchAppListCallback() {
+        this.viewModel.fetchAppList(new OnDatabaseActionCompleteCallback() {
             @Override
-            public void onSuccess(List<GameAppIdItem> items) {
-                int newRowCount = items.size();
-                Log.d(TAG, "Fetched " + newRowCount + " items");
-                if (newRowCount == 0) {
-                    showErrorMessage("API response returned array of size 0");
-                } else {
-                    runOnUiThread(() -> {
-                        showSearchResults();
-                        if (downloadCompleteToast != null) {
-                            downloadCompleteToast.cancel();
-                        }
-                        downloadCompleteToast = Toast.makeText(GameSearchActivity.this, "Download complete", Toast.LENGTH_SHORT);
-                        downloadCompleteToast.show();
-                    });
-                }
+            public void onSuccess() {
+                Log.d(TAG, "Finished fetching new items");
+
+                runOnUiThread(() -> {
+                    showSearchResults();
+                    if (downloadCompleteToast != null) {
+                        downloadCompleteToast.cancel();
+                    }
+                    downloadCompleteToast = Toast.makeText(GameSearchActivity.this, "Download complete", Toast.LENGTH_SHORT);
+                    downloadCompleteToast.show();
+                });
             }
 
             @Override
