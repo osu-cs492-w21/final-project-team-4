@@ -36,7 +36,7 @@ import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class MainActivity extends AppCompatActivity
-implements GameTitleAdapter.OnSearchResultClickListener{
+implements GameTitleAdapter.OnSearchResultClickListener {
     private final static String TAG = MainActivity.class.getSimpleName();
 
     /*
@@ -76,6 +76,7 @@ implements GameTitleAdapter.OnSearchResultClickListener{
 
     private final CompositeDisposable disposable = new CompositeDisposable();
 
+    // Selects for what kind of news is displayed
     private enum FilterMode {
         Bookmarked,
         Owned,
@@ -93,9 +94,9 @@ implements GameTitleAdapter.OnSearchResultClickListener{
                 new ViewModelProvider.AndroidViewModelFactory(getApplication())
         ).get(GameAppIdViewModel.class);
 
-        filterNews(FilterMode.Bookmarked);
+        filterNews(FilterMode.Bookmarked); // Show bookmarked news on create
 
-       this.playedGameViewModel = new ViewModelProvider(this).get(PlayedGameViewModel.class);
+        this.playedGameViewModel = new ViewModelProvider(this).get(PlayedGameViewModel.class);
 
         //toolbar object for the upper toolbar (where the title is set)
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -110,38 +111,38 @@ implements GameTitleAdapter.OnSearchResultClickListener{
         toolbarBottom.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-              if(item.getItemId() == R.id.search_icon){
-                  Log.d(TAG, "Setting Activity to Search");
-                  Intent intent = new Intent(MainActivity.this, GameSearchActivity.class);
-                  startActivity(intent);
-              }else if(item.getItemId() == R.id.home_icon){
-                  Log.d(TAG, "Setting Activity to Home");
-              }else if(item.getItemId() == R.id.trending_icon){
-                  Log.d(TAG, "Setting Activity to Trending");
-                  Intent intent = new Intent(MainActivity.this, TrendingActivity.class);
-                  startActivity(intent);
-              }else if(item.getItemId() == R.id.account_icon){
-                  Log.d(TAG, "Setting Activity to Options");
-                  openProfilePage();
-              }
-              //else none of the id's match
+                if (item.getItemId() == R.id.search_icon) {
+                    Log.d(TAG, "Setting Activity to Search");
+                    Intent intent = new Intent(MainActivity.this, GameSearchActivity.class);
+                    startActivity(intent);
+                } else if (item.getItemId() == R.id.home_icon) {
+                    Log.d(TAG, "Setting Activity to Home");
+                } else if (item.getItemId() == R.id.trending_icon) {
+                    Log.d(TAG, "Setting Activity to Trending");
+                    Intent intent = new Intent(MainActivity.this, TrendingActivity.class);
+                    startActivity(intent);
+                } else if (item.getItemId() == R.id.account_icon) {
+                    Log.d(TAG, "Setting Activity to Options");
+                    openProfilePage();
+                }
+                //else none of the id's match
                 return false;
             }
 
             public void openProfilePage() {
                 Intent profileIntent = new Intent(MainActivity.this, Settings.class);
- //               EditText editText = (EditText) findViewById(R.id.editText);
-       //         String message = editText.getText().toString();
-//                intent.putExtra(EXTRA_MESSAGE, message);
+                // EditText editText = (EditText) findViewById(R.id.editText);
+                // String message = editText.getText().toString();
+                // intent.putExtra(EXTRA_MESSAGE, message);
                 startActivity(profileIntent);
             }
 
 
         });
-        this.rvArticleView=findViewById(R.id.rv_game_title);
+        this.rvArticleView = findViewById(R.id.rv_game_title);
         this.rvArticleView.setLayoutManager(new LinearLayoutManager(this));
         this.rvArticleView.setHasFixedSize(true);
-        this.titleAdapter= new GameTitleAdapter(this);
+        this.titleAdapter = new GameTitleAdapter(this);
         this.rvArticleView.setAdapter(this.titleAdapter);
 
         this.sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
@@ -152,7 +153,7 @@ implements GameTitleAdapter.OnSearchResultClickListener{
     protected void onStop() {
         super.onStop();
 
-        this.disposable.clear();
+        this.disposable.clear(); // Clear remaining subscribers
     }
 
     @Override
@@ -165,7 +166,7 @@ implements GameTitleAdapter.OnSearchResultClickListener{
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_game_search:
-                Intent intent = new Intent(this, GameSearchActivity.class);
+                Intent intent = new Intent(this, GameSearchActivity.class); // TODO get rid of this
                 startActivity(intent);
                 return true;
             case R.id.action_filter_news:
@@ -175,7 +176,6 @@ implements GameTitleAdapter.OnSearchResultClickListener{
                 return super.onOptionsItemSelected(item);
         }
     }
-
 
 
     @Override
@@ -198,6 +198,8 @@ implements GameTitleAdapter.OnSearchResultClickListener{
                 LinearLayout.LayoutParams.WRAP_CONTENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT,
                 true); // Let taps outside the popup dismiss it
+
+        // Set up click listeners for each kind of filter
 
         TextView bookmarkedGamesFilter = popupView.findViewById(R.id.tv_filter_bookmarked_games);
         bookmarkedGamesFilter.setOnClickListener(new View.OnClickListener() {
@@ -230,11 +232,11 @@ implements GameTitleAdapter.OnSearchResultClickListener{
         popupWindow.showAtLocation(findViewById(R.id.main_content), Gravity.CENTER, 0, 0);
     }
 
+    // Select news to show based off a filter mode
     private void filterNews(FilterMode filterMode) {
         Log.d(TAG, "Filtering games using filter mode: " + filterMode.toString());
 
         if (filterMode == FilterMode.Bookmarked) {
-
             updateRecyclerView(viewModel.getBookmarkedGamesOneShot(), filterMode);
             return;
         }
@@ -251,22 +253,23 @@ implements GameTitleAdapter.OnSearchResultClickListener{
         }
 
         this.playedGameViewModel.loadData(STEAM_API_KEY, steamId, new OnDatabaseActionCompleteCallback() {
-                    @Override
-                    public void onSuccess() {
-                        if (filterMode == FilterMode.Owned) {
-                            updateRecyclerView(playedGameViewModel.getOwnedGameAppIds(), filterMode);
-                        } else {
-                            updateRecyclerView(playedGameViewModel.getRecentlyPlayedGameAppIds(), filterMode);
-                        }
-                    }
+            @Override
+            public void onSuccess() {
+                if (filterMode == FilterMode.Owned) {
+                    updateRecyclerView(playedGameViewModel.getOwnedGameAppIds(), filterMode);
+                } else {
+                    updateRecyclerView(playedGameViewModel.getRecentlyPlayedGameAppIds(), filterMode);
+                }
+            }
 
-                    @Override
-                    public void onFailure(Throwable throwable) {
-                        Log.d(TAG, "Failed to load played game data");
-                    }
-                });
+            @Override
+            public void onFailure(Throwable throwable) {
+                Log.d(TAG, "Failed to load played game data");
+            }
+        });
     }
 
+    // Update news feed given data and a filter mode (which is used only for logging)
     private void updateRecyclerView(Single<List<GameAppIdItem>> data, FilterMode filterMode) {
         disposable.add(data
                 .subscribeOn(Schedulers.io())
@@ -279,6 +282,7 @@ implements GameTitleAdapter.OnSearchResultClickListener{
                         throwable -> Log.e(TAG, "Unable to filter news using mode: " + filterMode.toString(), throwable)));
     }
 
+    // Notify user that they must enter a steam ID to use certain filter modes
     private void toastMissingSteamId() {
         if (toast != null) {
             toast.cancel();

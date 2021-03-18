@@ -8,6 +8,9 @@ import androidx.room.PrimaryKey;
 
 import com.google.gson.annotations.SerializedName;
 
+// Data related to a game played by a Steam account associated with a given Steam ID
+// This class is used for both recently played games and owned games, though the API returns slightly
+// different data for each
 @Entity(tableName = "playedGameData")
 public class PlayedGameData {
     @PrimaryKey

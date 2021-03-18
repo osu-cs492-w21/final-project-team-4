@@ -11,8 +11,8 @@ import io.reactivex.rxjava3.core.Single;
 
 @Dao
 public interface PlayedGameDataDao {
-    @Query("DELETE FROM playedGameData WHERE recentlyPlayed = :recentlyPlayed")
-    void deleteAll(boolean recentlyPlayed);
+    @Query("DELETE FROM playedGameData")
+    void deleteAll();
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertAll(List<PlayedGameData> playedGameData);
@@ -20,12 +20,12 @@ public interface PlayedGameDataDao {
     @Query("SELECT * FROM playedGameData WHERE recentlyPlayed = 1 ORDER BY playtimeForever DESC")
     Single<List<PlayedGameData>> getRecentlyPlayedGames();
 
-    @Query("SELECT * FROM gameAppIdItems WHERE appId IN (SELECT appId FROM playedGameData WHERE recentlyPlayed = 1 ORDER BY playtimeForever DESC)")
+    @Query("SELECT * FROM gameAppIdItems WHERE appId IN (SELECT appId FROM playedGameData WHERE recentlyPlayed = 1) ORDER BY name ASC")
     Single<List<GameAppIdItem>> getRecentlyPlayedGameAppIds();
 
     @Query("SELECT * FROM playedGameData WHERE recentlyPlayed = 0 ORDER BY playtimeForever DESC")
     Single<List<PlayedGameData>> getOwnedGames();
 
-    @Query("SELECT * FROM gameAppIdItems WHERE appId IN (SELECT appId FROM playedGameData WHERE recentlyPlayed = 0 ORDER BY playtimeForever DESC)")
+    @Query("SELECT * FROM gameAppIdItems WHERE appId IN (SELECT appId FROM playedGameData WHERE recentlyPlayed = 0) ORDER BY name ASC")
     Single<List<GameAppIdItem>> getOwnedGameAppIds();
 }

@@ -8,7 +8,6 @@ import androidx.lifecycle.AndroidViewModel;
 
 import com.example.android.steamnews.data.GameAppIdItem;
 import com.example.android.steamnews.data.OnDatabaseActionCompleteCallback;
-import com.example.android.steamnews.data.PlayedGameData;
 import com.example.android.steamnews.data.PlayedGameRepository;
 
 import java.util.List;

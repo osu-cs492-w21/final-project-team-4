@@ -97,7 +97,7 @@ public class GameSearchActivity extends AppCompatActivity
             }
         });
 
-        // Check if the gameAppIdItems table is empty
+        // Ensure game appid database exists and is populated
         populateDatabase();
 
         setupMenuBar();
@@ -187,7 +187,7 @@ public class GameSearchActivity extends AppCompatActivity
         });
     }
 
-    // Populate database if empty
+    // Check if database is empty. If it is, then fetch data and populate the database.
     private void populateDatabase() {
         showLoadingIndicator(getString(R.string.game_search_loading_text_start));
 

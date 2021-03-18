@@ -12,8 +12,7 @@ public interface GameAppIdService {
     Call<ArticleData> getArticles();
 
     @GET("ISteamNews/GetNewsForApp/v0002/")
-    Call<ArticleData> getArticleData(
-            @Query("appid") int appid);
+    Call<ArticleData> getArticleData(@Query("appid") int appid);
 
     @GET("api.php?request=top100in2weeks")
     Call<TrendingData> getTrendingData();

@@ -21,9 +21,6 @@ public interface GameAppIdsDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertAll(List<GameAppIdItem> gameAppIdItems);
 
-    @Delete
-    void delete(GameAppIdItem gameAppidItem);
-
     @Query("DELETE FROM gameAppIdItems")
     void deleteAll();
 
@@ -36,10 +33,10 @@ public interface GameAppIdsDao {
     @Query("SELECT * FROM gameAppIdItems WHERE name LIKE :query ORDER BY name ASC")
     Single<List<GameAppIdItem>> search(String query);
 
-    @Query("SELECT * FROM gameAppIdItems WHERE bookmarked = 1")
+    @Query("SELECT * FROM gameAppIdItems WHERE bookmarked = 1 ORDER BY name ASC")
     LiveData<List<GameAppIdItem>> getBookmarkedGames();
 
-    @Query("SELECT * FROM gameAppIdItems WHERE bookmarked = 1")
+    @Query("SELECT * FROM gameAppIdItems WHERE bookmarked = 1 ORDER BY name ASC")
     Single<List<GameAppIdItem>> getBookmarkedGamesOneShot();
 }
 

@@ -29,12 +29,14 @@ public class PlayedGameRepository {
         this.gameAppIdService = Api.getInstance().getSteamService();
     }
 
-    private void rewriteAll(List<PlayedGameData> playedGameData, boolean recentlyPlayed, @Nullable OnDatabaseActionCompleteCallback onDatabaseActionCompleteCallback) {
+    private void rewriteAll(List<PlayedGameData> playedGameData, boolean deleteAll, @Nullable OnDatabaseActionCompleteCallback onDatabaseActionCompleteCallback) {
         AppDatabase.databaseWriteExecutor.execute(new Runnable() {
             @Override
             public void run() {
                 try {
-                    dao.deleteAll(recentlyPlayed);
+                    if (deleteAll) {
+                        dao.deleteAll();
+                    }
                     dao.insertAll(playedGameData);
 
                     if (onDatabaseActionCompleteCallback != null) {
@@ -58,6 +60,7 @@ public class PlayedGameRepository {
         return this.dao.getRecentlyPlayedGameAppIds();
     }
 
+    // Loads data with caching based off the Steam ID
     public void loadData(String apiKey, String steamId, @Nullable OnDatabaseActionCompleteCallback onDatabaseActionCompleteCallback) {
         if (!steamId.equals(this.currentSteamId)) {
             this.currentSteamId = steamId;
@@ -68,12 +71,18 @@ public class PlayedGameRepository {
         }
     }
 
+    // Fetch all data for owned and recently played games
     private void fetchData(String apiKey, String steamId, @Nullable OnDatabaseActionCompleteCallback onDatabaseActionCompleteCallback) {
         Log.d(TAG, "Fetching data for steam ID: " + steamId);
 
+        // Fetch owned games then recently played games, in that specific order.
+        // Because the appId is the primary key, when the recently played games are inserted,
+        // they will update the recentlyPlayed flag in the row to true. If the owned games
+        // were fetched second, then they'd reset all these flags to false
         fetchOwnedGames(apiKey, steamId, onDatabaseActionCompleteCallback);
     }
 
+    // Fetch owned game data
     private void fetchOwnedGames(String apiKey, String steamId, @Nullable OnDatabaseActionCompleteCallback onDatabaseActionCompleteCallback) {
         Call<PlayedGameDataList> ownedGamesResults = this.gameAppIdService.getOwnedGames(apiKey, steamId);
 
@@ -82,11 +91,15 @@ public class PlayedGameRepository {
             public void onResponse(Call<PlayedGameDataList> call, Response<PlayedGameDataList> response) {
                 if (response.code() == 200) {
                     Log.d(TAG, "Fetched owned played games list, now updating database");
+
+                    // Ensure recentlyPlayed is false for all items
                     List<PlayedGameData> items = response.body().items;
                     for (int i = 0; i < items.size(); i++) {
                         items.get(i).recentlyPlayed = false;
                     }
-                    rewriteAll(items, false, new OnDatabaseActionCompleteCallback() {
+
+                    // Write to database and then fetch recently played games
+                    rewriteAll(items, true, new OnDatabaseActionCompleteCallback() {
                         @Override
                         public void onSuccess() {
                             fetchRecentlyPlayedGames(apiKey, steamId, onDatabaseActionCompleteCallback);
@@ -114,6 +127,7 @@ public class PlayedGameRepository {
         });
     }
 
+    // Fetch recently played game data
     private void fetchRecentlyPlayedGames(String apiKey, String steamId, @Nullable OnDatabaseActionCompleteCallback onDatabaseActionCompleteCallback) {
         Call<PlayedGameDataList> recentlyPlayedGamesResults = this.gameAppIdService.getRecentlyPlayedGames(apiKey, steamId);
 
@@ -122,11 +136,15 @@ public class PlayedGameRepository {
             public void onResponse(Call<PlayedGameDataList> call, Response<PlayedGameDataList> response) {
                 if (response.code() == 200) {
                     Log.d(TAG, "Fetched recently played games list, now updating database");
+
+                    // Ensure recentlyPlayed is true for all data
                     List<PlayedGameData> items = response.body().items;
                     for (int i = 0; i < items.size(); i++) {
                         items.get(i).recentlyPlayed = true;
                     }
-                    rewriteAll(items, true, onDatabaseActionCompleteCallback);
+
+                    // Write to database
+                    rewriteAll(items, false, onDatabaseActionCompleteCallback);
                 } else {
                     if (onDatabaseActionCompleteCallback != null) {
                         onDatabaseActionCompleteCallback.onFailure(new Throwable("API response code " + response.code()));
