@@ -17,4 +17,10 @@ public interface GameAppIdService {
 
     @GET("api.php?request=top100in2weeks")
     Call<TrendingData> getTrendingData();
+
+    @GET("IPlayerService/GetRecentlyPlayedGames/v0001/?format=json")
+    Call<PlayedGameDataList> getRecentlyPlayedGames(@Query("key") String apiKey, @Query("steamid") String steamId);
+
+    @GET("/IPlayerService/GetOwnedGames/v0001/?format=json")
+    Call<PlayedGameDataList> getOwnedGames(@Query("key") String apiKey, @Query("steamid") String steamId);
 }

@@ -6,22 +6,17 @@ import android.util.Log;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import com.example.android.steamnews.Api;
 
 import java.util.List;
 
-import io.reactivex.rxjava3.core.Flowable;
 import io.reactivex.rxjava3.core.Single;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 public class GameAppIdRepository {
     private static final String TAG = GameAppIdRepository.class.getSimpleName();
-    private static final String BASE_URL = "https://api.steampowered.com";
 
     private GameAppIdsDao dao;
     private GameAppIdService gameAppIdService;
@@ -35,14 +30,7 @@ public class GameAppIdRepository {
         AppDatabase db = AppDatabase.getDatabase(application);
         this.dao = db.gameAppIdsDao();
 
-        Gson gson = new GsonBuilder()
-                .registerTypeAdapter(GameAppIdList.class, new GameAppIdList.JsonDeserializer())
-                .create();
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create(gson))
-                .build();
-        this.gameAppIdService = retrofit.create(GameAppIdService.class);
+        this.gameAppIdService = Api.getInstance().getSteamService();
     }
 
     public void insertGameAppIdItem(GameAppIdItem gameAppIdItem) {

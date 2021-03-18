@@ -61,6 +61,7 @@ implements GameTitleAdapter.OnSearchResultClickListener{
     private RecyclerView rvArticleView;
     private GameTitleAdapter titleAdapter;
     private GameAppIdViewModel viewModel;
+    private PlayedGameViewModel playedGameViewModel;
 
     private SharedPreferences sharedPreferences;
 
@@ -74,7 +75,7 @@ implements GameTitleAdapter.OnSearchResultClickListener{
                 this,
                 new ViewModelProvider.AndroidViewModelFactory(getApplication())
         ).get(GameAppIdViewModel.class);
-       this.viewModel.getBookmarkedGames().observe(
+        this.viewModel.getBookmarkedGames().observe(
                this,
                new Observer<List<GameAppIdItem>>() {
                    @Override
@@ -85,6 +86,7 @@ implements GameTitleAdapter.OnSearchResultClickListener{
                }
        );
 
+       this.playedGameViewModel = new ViewModelProvider(this).get(PlayedGameViewModel.class);
 
         //toolbar object for the upper toolbar (where the title is set)
         Toolbar toolbar = findViewById(R.id.toolbar);

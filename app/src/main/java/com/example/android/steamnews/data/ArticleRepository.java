@@ -4,20 +4,15 @@ import android.util.Log;
 
 import androidx.lifecycle.MutableLiveData;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import com.example.android.steamnews.Api;
 
 import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
-
 public class ArticleRepository {
     private static final String TAG = ArticleRepository.class.getSimpleName();
-    private static final String BASE_URL = "https://api.steampowered.com";
 
     private MutableLiveData<List<ArticleDataItem>> articleDataList;
 
@@ -27,16 +22,7 @@ public class ArticleRepository {
         this.articleDataList = new MutableLiveData<>();
         this.articleDataList.setValue(null);
 
-
-
-        Gson gson = new GsonBuilder()
-                .registerTypeAdapter(ArticleData.class, new ArticleData.JsonDeserializer())
-                .create();
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create(gson))
-                .build();
-        this.gameAppIdService = retrofit.create(GameAppIdService.class);
+        this.gameAppIdService = Api.getInstance().getSteamService();
 
     }
     public MutableLiveData<List<ArticleDataItem>> getArticleData(){
