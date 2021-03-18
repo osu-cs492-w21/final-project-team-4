@@ -10,11 +10,20 @@
     <string name="game_search_button_text">Search</string>
 
     <string name="action_game_search">Search and bookmark games</string>
+    <string name="action_filter_news">Filter News Feed</string>
+
+    <string name="filter_bookmarked_games_text">Bookmarked games</string>
+    <string name="filter_owned_games_text">Owned games</string>
+    <string name="filter_recent_games_text">Recently played games</string>
 
     <string name="game_search_empty_query_warning">Please enter the name of a game to search</string>
     <string name="game_search_loading_text_fetch">Downloading list of Steam games\n\nThis may take a few seconds\nbut only needs to happen once</string>
     <string name="game_search_loading_text_search">Searching...</string>
     <string name="game_search_loading_text_start" />
     <string name="game_search_error_text">Unable to fetch data. Please check your internet connection.\n\nError message: %1$s</string>
+
+    <string name="pref_user_username_key" translatable="false">pref_user_username</string>
+
+    <string name="pref_user_steamid_key" translatable="false">pref_user_steamid</string>
 
 </resources>

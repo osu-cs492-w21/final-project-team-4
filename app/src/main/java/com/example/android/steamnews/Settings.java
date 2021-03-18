@@ -20,6 +20,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.preference.PreferenceManager;
 
 public class Settings extends AppCompatActivity {
 
@@ -27,12 +28,6 @@ public class Settings extends AppCompatActivity {
     private ImageView newImage;
     private ImageView addPicIcon;
     private Button submitb;
-
-    public static final String user_username = "username";
-    public static final String user_key = "username_key";
-
-    public static final String user_steamid = "steamid";
-    public static final String steam_key = "steamid_Key";
 
     private SharedPreferences userPreferences;
 
@@ -48,6 +43,8 @@ public class Settings extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
+
+        this.userPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 
         ImageView imgClick;
         addPicIcon = findViewById(R.id.take_pic_iv);
@@ -108,16 +105,14 @@ public class Settings extends AppCompatActivity {
                 String userName = usernameET.getText().toString();
                 String steamName = steamidET.getText().toString();
 
-                // for username
-                userPreferences = getSharedPreferences(user_username, MODE_PRIVATE);
                 SharedPreferences.Editor editor = userPreferences.edit();
-                editor.putString(user_key, userName);
-                editor.apply();
+
+                // for username
+                editor.putString(getString(R.string.pref_user_username_key), userName);
 
                 // for steam id
-                userPreferences = getSharedPreferences(user_steamid, MODE_PRIVATE);
-                editor = userPreferences.edit();
-                editor.putString(steam_key, steamName);
+                editor.putString(getString(R.string.pref_user_steamid_key), steamName);
+
                 editor.apply();
                 // set the users new input strings
                 displayNewData();
@@ -154,16 +149,12 @@ public class Settings extends AppCompatActivity {
     }
 
     private void displayNewData() {
+        String userName = userPreferences.getString(getString(R.string.pref_user_username_key), "");
 
-        SharedPreferences preferenceshared = getSharedPreferences(user_username, MODE_PRIVATE);
-        String userName = preferenceshared.getString(user_key, null);
-
-        preferenceshared  = getSharedPreferences(user_steamid, MODE_PRIVATE);
-        String steamName =  preferenceshared.getString(steam_key, null);
+        String steamName =  userPreferences.getString(getString(R.string.pref_user_steamid_key), "");
         //set edittext to new data that user entered
         usernameET.setText(userName);
         steamidET.setText(steamName);
-
     }
 
     private void openCamera() {

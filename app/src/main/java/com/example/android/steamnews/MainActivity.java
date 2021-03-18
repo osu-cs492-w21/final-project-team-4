@@ -6,23 +6,23 @@ import androidx.appcompat.widget.Toolbar;
 
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.app.ActionBar;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-import androidx.core.view.GravityCompat;
-
-import android.content.Intent;
-import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.widget.LinearLayout;
+import android.widget.PopupWindow;
+import android.widget.TextView;
 
 import com.example.android.steamnews.data.GameAppIdItem;
 
@@ -31,12 +31,38 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity
 implements GameTitleAdapter.OnSearchResultClickListener{
     private final static String TAG = MainActivity.class.getSimpleName();
+
+    /*
+     * To use your own Steam API key, create a file called `gradle.properties` in your
+     * GRADLE_USER_HOME directory (this will usually be `$HOME/.gradle/` in MacOS/Linux and
+     * `$USER_HOME/.gradle/` in Windows), and add the following line:
+     *
+     *   STEAM_API_KEY="<put_your_own_Steam_API_key_here>"
+     *
+     * The Gradle build for this project is configured to automatically grab that value and store
+     * it in the field `BuildConfig.STEAM_API_KEY` that's used below.  You can read more
+     * about this setup on the following pages:
+     *
+     *   https://developer.android.com/studio/build/gradle-tips#share-custom-fields-and-resource-values-with-your-app-code
+     *
+     *   https://docs.gradle.org/current/userguide/build_environment.html#sec:gradle_configuration_properties
+     *
+     * Alternatively, you can just hard-code your API key below 🤷‍.  If you do hard code your API
+     * key below, make sure to get rid of the following line (line 18) in build.gradle:
+     *
+     *   buildConfigField("String", "STEAM_API_KEY", STEAM_API_KEY)
+     *
+     * Get your own Steam API key:
+     *   https://steamcommunity.com/dev/apikey
+     */
+    private static final String STEAM_API_KEY = BuildConfig.STEAM_API_KEY;
+
     //rv for listing the titles of games
     private RecyclerView rvArticleView;
     private GameTitleAdapter titleAdapter;
     private GameAppIdViewModel viewModel;
 
-
+    private SharedPreferences sharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,7 +133,7 @@ implements GameTitleAdapter.OnSearchResultClickListener{
         this.titleAdapter= new GameTitleAdapter(this);
         this.rvArticleView.setAdapter(this.titleAdapter);
 
-
+        this.sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 
     }
 
@@ -124,6 +150,9 @@ implements GameTitleAdapter.OnSearchResultClickListener{
                 Intent intent = new Intent(this, GameSearchActivity.class);
                 startActivity(intent);
                 return true;
+            case R.id.action_filter_news:
+                openFilterNewsPopup();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -139,5 +168,38 @@ implements GameTitleAdapter.OnSearchResultClickListener{
         Intent intent = new Intent(this, DetailedArticleActivity.class);
         intent.putExtra("EXTRA_APPID", temp);
         startActivity(intent);
+    }
+
+    private void openFilterNewsPopup() {
+        // Create popup window
+        LayoutInflater inflater = LayoutInflater.from(this);
+        View popupView = inflater.inflate(R.layout.filter_news_popup, null, false);
+
+        final PopupWindow popupWindow = new PopupWindow(
+                popupView,
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                true); // Let taps outside the popup dismiss it
+
+        String steamId = sharedPreferences.getString(
+                getString(R.string.pref_user_steamid_key),
+                null
+        );
+
+        if (steamId == null) {
+            Log.w(TAG, "Steam ID is null");
+        }
+
+        TextView bookmarkedGamesFilter = popupView.findViewById(R.id.tv_filter_bookmarked_games);
+        bookmarkedGamesFilter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "Filter bookmarked games");
+                popupWindow.dismiss();
+            }
+        });
+
+        // Show popup window
+        popupWindow.showAtLocation(findViewById(R.id.main_content), Gravity.CENTER, 0, 0);
     }
 }
